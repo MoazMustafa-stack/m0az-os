@@ -34,3 +34,21 @@ unconfigured rather than inferred from local files.
 
 **Why:** the repository is public and the user explicitly requested care around
 sensitive data and projects.
+
+## ADR-005 — Native history for persistent in-app state
+
+**Decision:** in-app navigation updates the browser URL with the History API while
+the shared system provider remains mounted. Back/forward events synchronize the
+same reducer state.
+
+**Why:** replacing the full App Router tree during terminal-driven navigation reset
+the simulated host session. Native history preserves the OS session while keeping
+routes shareable and server-rendered on direct visits.
+
+## ADR-006 — Explicit hydration readiness for visual tests
+
+**Decision:** the provider marks the document ready after React hydration, and
+visual tests wait for that marker before taking screenshots.
+
+**Why:** Playwright temporarily hides carets during screenshots. A screenshot racing
+hydration could mutate the terminal input and produce a false hydration warning.

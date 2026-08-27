@@ -18,7 +18,9 @@ tags: [debugging, runbook]
 ## Common failure boundaries
 
 - **Hydration:** time and uptime must initialize deterministically, then update in an
-  effect. Browser APIs stay behind client boundaries.
+  effect. Browser APIs stay behind client boundaries. Visual tests wait for
+  `data-m0az-ready="true"` before screenshots so Playwright's caret suppression
+  cannot race React hydration.
 - **Terminal:** input is data only. Never pass it to `eval`, `Function`, a shell,
   a server action, or an API endpoint.
 - **Routes:** project slugs must exist in `site.projects`; unknown slugs use the
@@ -33,9 +35,11 @@ tags: [debugging, runbook]
 ```bash
 npm run dev
 npm run lint
+npm run typecheck
 npm run test
 npm run test:e2e
 npm run build
+npm run check
 ```
 
 Record new repeatable failures and their fixes here.
