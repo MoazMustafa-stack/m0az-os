@@ -1,34 +1,32 @@
 "use client";
 
+import { useEffect } from "react";
+
 import type { SectionId } from "@/types/domain";
+import { CommandPalette } from "./CommandPalette";
 import { Sidebar } from "./Sidebar";
 import { StatusBar } from "./StatusBar";
 import { SystemProvider, useSystem } from "./SystemProvider";
+import { Terminal } from "./Terminal";
 import { Workspace } from "./Workspace";
 
-function TerminalPlaceholder() {
-  const { state, dispatch } = useSystem();
-  return (
-    <section className={state.terminalExpanded ? "terminal-dock expanded" : "terminal-dock"} aria-label="Interactive terminal">
-      <button
-        className="terminal-bar"
-        type="button"
-        onClick={() => dispatch({ type: "TOGGLE_TERMINAL" })}
-        aria-expanded={state.terminalExpanded}
-      >
-        <span><i className="terminal-light" /> TERMINAL / portfolio-sh</span>
-        <span>{state.terminalExpanded ? "MINIMIZE" : "EXPAND"} <b aria-hidden="true">⌃</b></span>
-      </button>
-      <div className="terminal-placeholder">
-        <span className="terminal-prompt">moaz@{state.host}:~$</span>
-        <span> type <strong>help</strong> to explore</span><i className="block-cursor" aria-hidden="true" />
-      </div>
-    </section>
-  );
-}
-
 function Shell() {
-  const { state } = useSystem();
+  const { state, dispatch } = useSystem();
+  useEffect(() => {
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        dispatch({ type: "TOGGLE_PALETTE" });
+      } else if (event.key === "Escape") {
+        dispatch({ type: "TOGGLE_PALETTE", open: false });
+      } else if (event.key === "/" && !(event.target instanceof HTMLInputElement)) {
+        event.preventDefault();
+        window.dispatchEvent(new Event("m0az:focus-terminal"));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [dispatch]);
   return (
     <div className="os-viewport" data-theme={state.theme}>
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -37,7 +35,8 @@ function Shell() {
         <Sidebar />
         <Workspace />
       </div>
-      <TerminalPlaceholder />
+      <Terminal />
+      <CommandPalette />
       <div className="scanlines" aria-hidden="true" />
     </div>
   );

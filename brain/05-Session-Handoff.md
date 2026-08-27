@@ -12,9 +12,9 @@ buildable and public-safe.
 
 ## Next concrete step
 
-Replace the terminal placeholder with the tokenizer, parser, fictional filesystem,
-command registry/executor, history, autocomplete, and project-host behavior. Route
-all navigation commands through the existing `navigate` action.
+Add the skippable first-visit boot flow, notification/effect layer, explicit hidden
+discovery feedback, metadata files, and test harness. Then perform the accessibility,
+performance, mobile, and visual review before documentation/publishing.
 
 ## Constraints to preserve
 
