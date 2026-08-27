@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -9,7 +10,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://m0az-os.dev"),
+  metadataBase: SITE_URL,
   title: {
     default: "M0AZ_OS — Moaz, software engineer",
     template: "%s · M0AZ_OS",

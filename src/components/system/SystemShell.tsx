@@ -3,7 +3,9 @@
 import { useEffect } from "react";
 
 import type { SectionId } from "@/types/domain";
+import { BootScreen } from "./BootScreen";
 import { CommandPalette } from "./CommandPalette";
+import { NotificationCenter } from "./NotificationCenter";
 import { Sidebar } from "./Sidebar";
 import { StatusBar } from "./StatusBar";
 import { SystemProvider, useSystem } from "./SystemProvider";
@@ -17,6 +19,8 @@ function Shell() {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         dispatch({ type: "TOGGLE_PALETTE" });
+      } else if (event.key === "Escape" && state.bootVisible) {
+        dispatch({ type: "SET_BOOT", visible: false, complete: true });
       } else if (event.key === "Escape") {
         dispatch({ type: "TOGGLE_PALETTE", open: false });
       } else if (event.key === "/" && !(event.target instanceof HTMLInputElement)) {
@@ -26,7 +30,7 @@ function Shell() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [dispatch]);
+  }, [dispatch, state.bootVisible]);
   return (
     <div className="os-viewport" data-theme={state.theme}>
       <a className="skip-link" href="#main-content">Skip to content</a>
@@ -37,6 +41,8 @@ function Shell() {
       </div>
       <Terminal />
       <CommandPalette />
+      <NotificationCenter />
+      <BootScreen />
       <div className="scanlines" aria-hidden="true" />
     </div>
   );

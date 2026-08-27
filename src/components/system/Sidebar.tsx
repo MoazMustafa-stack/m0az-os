@@ -17,6 +17,7 @@ export function Sidebar() {
               className={state.activeSection === item.id ? "nav-item active" : "nav-item"}
               onClick={() => navigate(item.id)}
               type="button"
+              aria-label={item.label}
               aria-current={state.activeSection === item.id ? "page" : undefined}
             >
               <span className="nav-index">{item.shortcut}</span>

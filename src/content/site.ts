@@ -25,12 +25,14 @@ export const siteIdentity = {
 
 export const navigation: NavigationItem[] = [
   { id: "home", label: "HOME", path: "/", shortcut: "01" },
-  { id: "projects", label: "PROJECTS", path: "/projects", shortcut: "02" },
-  { id: "experience", label: "EXPERIENCE", path: "/experience", shortcut: "03" },
-  { id: "research", label: "RESEARCH", path: "/research", shortcut: "04" },
-  { id: "skills", label: "SKILLS", path: "/skills", shortcut: "05" },
-  { id: "lab", label: "LAB", path: "/lab", shortcut: "06" },
-  { id: "contact", label: "CONTACT", path: "/contact", shortcut: "07" },
+  { id: "about", label: "ABOUT", path: "/about", shortcut: "02" },
+  { id: "projects", label: "PROJECTS", path: "/projects", shortcut: "03" },
+  { id: "experience", label: "EXPERIENCE", path: "/experience", shortcut: "04" },
+  { id: "research", label: "RESEARCH", path: "/research", shortcut: "05" },
+  { id: "skills", label: "SKILLS", path: "/skills", shortcut: "06" },
+  { id: "lab", label: "LAB", path: "/lab", shortcut: "07" },
+  { id: "resume", label: "RESUME", path: "/resume", shortcut: "08" },
+  { id: "contact", label: "CONTACT", path: "/contact", shortcut: "09" },
 ];
 
 export const projects: Project[] = [

@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import {
   createContext,
   type Dispatch,
@@ -12,7 +11,7 @@ import {
   useReducer,
 } from "react";
 
-import { navigation } from "@/content/site";
+import { findProject, navigation } from "@/content/site";
 import type {
   AchievementId,
   PersistedSession,
@@ -39,6 +38,8 @@ type SystemEvent =
   | { type: "UNLOCK"; achievement: AchievementId; secret?: string }
   | { type: "SET_ROOT"; enabled: boolean }
   | { type: "INCREMENT_COMMAND" }
+  | { type: "NOTIFY"; kind: "system" | "network" | "achievement" | "warning"; text: string }
+  | { type: "CLEAR_NOTIFICATION"; id: number }
   | { type: "HYDRATE"; persisted: PersistedSession }
   | { type: "RESET_LOCAL" };
 
@@ -78,6 +79,7 @@ function createInitialState(
     discoveredSecrets: [],
     commandCount: 0,
     startedAt: 0,
+    notification: null,
   };
 }
 
@@ -136,6 +138,10 @@ export function systemReducer(state: SessionState, event: SystemEvent): SessionS
       return { ...state, sessionMode: event.enabled ? "root" : "visitor" };
     case "INCREMENT_COMMAND":
       return { ...state, commandCount: state.commandCount + 1 };
+    case "NOTIFY":
+      return { ...state, notification: { id: Date.now(), kind: event.kind, text: event.text } };
+    case "CLEAR_NOTIFICATION":
+      return state.notification?.id === event.id ? { ...state, notification: null } : state;
     case "HYDRATE":
       return {
         ...state,
@@ -168,8 +174,6 @@ export function SystemProvider({
   initialSection: SectionId;
   initialProjectSlug?: string | null;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const [state, dispatch] = useReducer(
     systemReducer,
     createInitialState(initialSection, initialProjectSlug),
@@ -177,17 +181,48 @@ export function SystemProvider({
 
   useEffect(() => {
     dispatch({ type: "SET_STARTED", startedAt: Date.now() });
+    let completedBoot = false;
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const persisted = JSON.parse(saved) as PersistedSession;
         if (persisted.version === 1) {
+          completedBoot = persisted.bootComplete;
           dispatch({ type: "HYDRATE", persisted });
         }
       }
     } catch {
       // A disabled or malformed localStorage must never block the portfolio.
     }
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    dispatch({
+      type: "SET_BOOT",
+      visible: !completedBoot && !reducedMotion,
+      complete: completedBoot || reducedMotion,
+    });
+    document.documentElement.dataset.m0azReady = "true";
+    return () => {
+      delete document.documentElement.dataset.m0azReady;
+    };
+  }, []);
+
+  useEffect(() => {
+    const syncFromHistory = () => {
+      const currentPath = window.location.pathname;
+      const projectMatch = currentPath.match(/^\/projects\/([^/]+)\/?$/);
+      if (projectMatch) {
+        dispatch({ type: "NAVIGATE", section: "project", projectSlug: projectMatch[1] });
+        dispatch({ type: "SET_DIRECTORY", directory: `/home/moaz/projects/${projectMatch[1]}`, host: projectMatch[1] });
+        document.title = `${findProject(projectMatch[1])?.name ?? "Project"} · M0AZ_OS`;
+        return;
+      }
+      const route = navigation.find((item) => item.path === currentPath.replace(/\/$/, "") || (item.path === "/" && currentPath === "/"));
+      dispatch({ type: "NAVIGATE", section: route?.id ?? "home" });
+      dispatch({ type: "SET_DIRECTORY", directory: "/home/moaz", host: "portfolio" });
+      document.title = route?.id === "home" || !route ? "M0AZ_OS — Moaz, software engineer" : `${route.label[0]}${route.label.slice(1).toLowerCase()} · M0AZ_OS`;
+    };
+    window.addEventListener("popstate", syncFromHistory);
+    return () => window.removeEventListener("popstate", syncFromHistory);
   }, []);
 
   useEffect(() => {
@@ -223,9 +258,17 @@ export function SystemProvider({
       const path = project
         ? `/projects/${project}`
         : navigation.find((item) => item.id === section)?.path ?? `/${section}`;
-      if (pathname !== path) router.push(path);
+      if (window.location.pathname !== path) {
+        window.history.pushState({ m0az: true }, "", path);
+        const label = project ? findProject(project)?.name ?? "Project" : navigation.find((item) => item.id === section)?.label ?? "M0AZ_OS";
+        document.title = section === "home"
+          ? "M0AZ_OS — Moaz, software engineer"
+          : project
+            ? `${label} · M0AZ_OS`
+            : `${label[0]}${label.slice(1).toLowerCase()} · M0AZ_OS`;
+      }
     },
-    [pathname, router],
+    [],
   );
 
   const value = useMemo(() => ({ state, dispatch, navigate }), [state, navigate]);

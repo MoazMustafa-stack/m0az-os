@@ -114,6 +114,7 @@ export interface SessionState {
   discoveredSecrets: string[];
   commandCount: number;
   startedAt: number;
+  notification: { id: number; kind: "system" | "network" | "achievement" | "warning"; text: string } | null;
 }
 
 export interface PersistedSession {

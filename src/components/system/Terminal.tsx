@@ -37,18 +37,22 @@ export function Terminal() {
     if (state.achievements.includes(achievement)) return;
     dispatch({ type: "UNLOCK", achievement, secret });
     const definition = achievements.find((item) => item.id === achievement);
-    if (definition) dispatch({ type: "APPEND_ENTRIES", entries: entries([`[achievement] ${definition.name} unlocked`], "system") });
+    if (definition) {
+      dispatch({ type: "APPEND_ENTRIES", entries: entries([`[achievement] ${definition.name} unlocked`], "system") });
+      dispatch({ type: "NOTIFY", kind: "achievement", text: `${definition.name} — ${definition.description}` });
+    }
   };
 
   const run = (raw: string) => {
     const command = raw.trim();
     if (!command) return;
     document.documentElement.classList.remove("low-power");
+    const commandPrompt = `${state.sessionMode === "root" ? "root" : "moaz"}@${state.host}:${formatPath(state.terminalDirectory)}$`;
     const history = [...state.commandHistory.filter((item) => item !== command), command].slice(-50);
     dispatch({ type: "SET_HISTORY", history });
     dispatch({ type: "INCREMENT_COMMAND" });
     dispatch({ type: "TOGGLE_TERMINAL", expanded: true });
-    dispatch({ type: "APPEND_ENTRIES", entries: entries([command], "command") });
+    dispatch({ type: "APPEND_ENTRIES", entries: entries([`${commandPrompt} ${command}`], "command") });
 
     const result = executeTerminalCommand(command, {
       cwd: state.terminalDirectory,
@@ -66,7 +70,10 @@ export function Terminal() {
     else if (result.lines.length) dispatch({ type: "APPEND_ENTRIES", entries: entries(result.lines, result.error ? "error" : "output") });
 
     const effect = result.effect;
-    if (effect?.navigate) navigate(effect.navigate.section, effect.navigate.projectSlug);
+    if (effect?.navigate) {
+      navigate(effect.navigate.section, effect.navigate.projectSlug);
+      dispatch({ type: "NOTIFY", kind: effect.host ? "network" : "system", text: effect.host ? `${effect.host} mounted` : `${effect.navigate.section} mounted` });
+    }
     if (effect?.directory) dispatch({ type: "SET_DIRECTORY", directory: effect.directory, host: effect.host });
     else if (effect?.host) dispatch({ type: "SET_DIRECTORY", directory: state.terminalDirectory, host: effect.host });
     if (effect?.theme) dispatch({ type: "SET_THEME", theme: effect.theme });
@@ -134,7 +141,7 @@ export function Terminal() {
         <div className="terminal-transcript" ref={transcriptRef} role="log" aria-label="Terminal transcript">
           {state.terminalEntries.map((entry) => (
             <div className={`terminal-entry ${entry.kind}`} key={entry.id}>
-              {entry.kind === "command" ? <><span className="entry-prompt">{prompt}</span> {entry.text}</> : entry.text || <br />}
+              {entry.kind === "command" ? <span className="entry-prompt">{entry.text}</span> : entry.text || <br />}
             </div>
           ))}
         </div>
