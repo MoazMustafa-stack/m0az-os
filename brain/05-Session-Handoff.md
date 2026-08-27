@@ -12,8 +12,9 @@ buildable and public-safe.
 
 ## Next concrete step
 
-Build the design tokens, structured content, responsive `SystemShell`, and semantic
-portfolio modules. Then commit the first product slice before starting terminal work.
+Replace the terminal placeholder with the tokenizer, parser, fictional filesystem,
+command registry/executor, history, autocomplete, and project-host behavior. Route
+all navigation commands through the existing `navigate` action.
 
 ## Constraints to preserve
 
