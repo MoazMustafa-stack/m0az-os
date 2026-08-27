@@ -57,3 +57,14 @@ Verification: ESLint, TypeScript, and the 15-page production build passed.
 Verification: dependency audit reported 0 vulnerabilities; lint and typecheck
 passed; 14 unit/component tests passed; the production build generated 20 routes;
 8 desktop/mobile browser tests passed with no representative console errors.
+
+## 2026-08-28 — Public repository published
+
+- Reauthenticated GitHub CLI without storing credentials in the repository.
+- Renamed the release branch to `main`, created the public repository, configured
+  `origin`, and pushed the complete milestone history.
+- Confirmed the remote is public and its default branch is `main`.
+- The first GitHub Actions job was prevented from starting by an account billing
+  lock. No workflow step ran; local verification remains green.
+
+Remote: `https://github.com/MoazMustafa-stack/m0az-os`

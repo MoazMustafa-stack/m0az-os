@@ -33,5 +33,8 @@ updated: 2026-08-28
 ## External state
 
 - Local Git repository exists at `~/Desktop/Projects/m0az-os` with milestone commits.
-- GitHub CLI account is configured but its token is currently invalid.
-- Public remote creation remains blocked until `gh auth login -h github.com` succeeds.
+- Public repository: `https://github.com/MoazMustafa-stack/m0az-os`.
+- Local `main` tracks `origin/main`; GitHub CLI authentication is working.
+- The initial GitHub Actions job could not start because GitHub reports the account
+  is locked due to a billing issue. This is an account-level blocker, not a test
+  failure; the identical local release suite passes.

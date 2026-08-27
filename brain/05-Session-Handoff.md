@@ -11,11 +11,10 @@ Prepare owner-reviewed public content and deploy the verified M0AZ_OS portfolio.
 
 ## Next concrete step
 
-1. Authenticate GitHub CLI with `gh auth login -h github.com`.
-2. Create and push the public `m0az-os` repository from the local `main` branch.
-3. Review and replace placeholder-safe project, contact, LinkedIn, and résumé fields
+1. Resolve the GitHub account billing lock, then rerun the failed `CI` workflow.
+2. Review and replace placeholder-safe project, contact, LinkedIn, and résumé fields
    in `src/content/site.ts`; never infer these from local files.
-4. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin and deploy.
+3. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin and deploy.
 
 ## Constraints to preserve
 
@@ -28,8 +27,11 @@ Prepare owner-reviewed public content and deploy the verified M0AZ_OS portfolio.
 
 ## Known blocker
 
-The saved GitHub CLI token is invalid. Local commits can continue. Public repository
-creation/push requires the owner to complete `gh auth login -h github.com`.
+The public repository and working GitHub authentication are in place. GitHub reports
+that Actions cannot start because the account is locked due to a billing issue. Once
+the account restriction is resolved, rerun workflow `CI` from the Actions page.
+
+Public repository: `https://github.com/MoazMustafa-stack/m0az-os`
 
 ## Verified baseline
 
