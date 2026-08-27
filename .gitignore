@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Obsidian device/session state and private project notes
+/brain/private/
+/brain/.obsidian/workspace.json
+/brain/.obsidian/workspace-mobile.json
+/brain/.obsidian/plugins/
+
+# Local reports and browser artifacts
+/playwright-report/
+/test-results/
+/artifacts/
