@@ -1,4 +1,4 @@
-import { graveyard, projects, research, siteIdentity, skillGroups } from "@/content/site";
+import { capabilityEvidence, education, experience, graveyard, projects, research, siteIdentity, skillGroups, technologyCategories } from "@/content/site";
 
 export interface FileNode {
   type: "file" | "directory" | "link";
@@ -55,17 +55,21 @@ export const filesystem: Record<string, FileNode> = {
   [`${HOME}/research`]: { type: "directory" },
   ...Object.fromEntries(research.map((item) => [`${HOME}/research/${item.id.toLowerCase()}.md`, { type: "file" as const, content: `${item.title}\n\n${item.abstract}` }])),
   [`${HOME}/experience`]: { type: "directory" },
-  [`${HOME}/experience/timeline.md`]: { type: "file", content: "Independent product engineering\nResearch and systems practice" },
+  [`${HOME}/experience/timeline.md`]: { type: "file", content: experience.map((item) => `${item.company} — ${item.role}\n${item.period} · ${item.location}\n${item.project}\n\n${item.outcomes.map((outcome) => `- ${outcome}`).join("\n")}`).join("\n\n") },
   [`${HOME}/skills`]: { type: "directory" },
   [`${HOME}/skills/processes.txt`]: { type: "file", content: skillGroups.map((group) => `${group.load.padEnd(7)} ${group.name}: ${group.items.join(", ")}`).join("\n") },
+  [`${HOME}/skills/technologies.txt`]: { type: "file", content: technologyCategories.map((category) => `${category.label}\n${category.items.map((item) => `  ${item.name}: ${item.context}`).join("\n")}`).join("\n\n") },
+  [`${HOME}/skills/capabilities.md`]: { type: "file", content: capabilityEvidence.map((capability) => `# ${capability.title}\n${capability.summary}\nDemonstrated in: ${capability.demonstratedIn.join(", ")}`).join("\n\n") },
   [`${HOME}/lab`]: { type: "directory" },
   [`${HOME}/lab/experiments`]: { type: "directory" },
   [`${HOME}/lab/prototypes`]: { type: "directory" },
   [`${HOME}/lab/.graveyard`]: { type: "directory", hidden: true },
   ...Object.fromEntries(graveyard.map((item) => [`${HOME}/lab/.graveyard/${item.name}.md`, { type: "file" as const, hidden: true, content: `WHY IT FAILED\n${item.failure}\n\nWHAT I LEARNED\n${item.learned}` }])),
   [`${HOME}/contact`]: { type: "directory" },
+  [`${HOME}/contact/email`]: { type: "link", target: `mailto:${siteIdentity.email}` },
   [`${HOME}/contact/github`]: { type: "link", target: siteIdentity.github },
-  [`${HOME}/resume`]: { type: "file", content: "Web resume mounted at /resume. Reviewed PDF not configured." },
+  [`${HOME}/contact/linkedin`]: { type: "link", target: siteIdentity.linkedin },
+  [`${HOME}/resume`]: { type: "file", content: `${siteIdentity.name}\n${siteIdentity.headline}\n\n${experience[0].company} — ${experience[0].role}\n${education[0].institution} — ${education[0].degree}\n\nPDF: ${siteIdentity.resumePath}` },
   ...projectNodes,
 };
 

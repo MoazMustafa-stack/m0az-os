@@ -17,15 +17,30 @@ For each project, verify:
 
 ## Editing identity and contacts
 
-Edit `siteIdentity` in `src/content/site.ts`. `email`, `linkedin`, and `resumePath`
-start as `null`. Add only a reviewed public alias/profile and a sanitized PDF placed
-under `public/`. The UI deliberately shows an honest unconfigured state otherwise.
+Edit `siteIdentity` in `src/content/site.ts`. The current email, LinkedIn, GitHub,
+and résumé path were explicitly owner-approved on 2026-08-28. The published PDF is
+an unchanged owner-approved copy; its phone number remains excluded from metadata.
 
-## Adding a project
+Identity, availability, proof points, education, experience, services, skill groups,
+technology categories, capability evidence, delivery stages, and work classifications
+stay centralized in the same content module. Technology entries state where a tool was
+used; capability claims link to named work and factual evidence. Do not publish
+self-scored percentages, unsupported expertise labels, or tools without public evidence.
+`projects`
+contains complete flagship studies, `archiveProjects` contains compact public work,
+and `privateWork` uses a typed nullable link. Private teasers must keep `href: null`
+and must not gain repository links or unpublished evidence.
 
-Add one complete `Project` record to `projects`. The same object powers the project
-list, detail route, metadata, terminal table, filesystem files, search, SSH context,
-Git simulation, and sitemap. Use a URL-safe unique slug and curated outbound links.
+## Adding work
+
+Add one complete flagship `Project` record to `projects`. The same object powers the
+work list, detail route, metadata, terminal table, filesystem files, search, SSH
+context, Git simulation, and sitemap. Use a URL-safe unique slug and curated links.
+
+Primary navigation is intentionally limited to Home, Work, Experience, About, and
+Contact. Add specialist routes to `secondaryNavigation` unless the information
+architecture is deliberately reconsidered. Work keeps `/projects` as its public URL,
+and `work` remains a terminal alias for `projects`.
 
 ## Metadata
 

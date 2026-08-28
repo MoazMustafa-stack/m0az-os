@@ -16,7 +16,7 @@ const context: CommandContext = {
 describe("command execution", () => {
   it("returns the same project navigation intent as visible UI", () => {
     expect(executeTerminalCommand("project 01", context).effect?.navigate).toEqual({
-      section: "project", projectSlug: "m0az-os",
+      section: "project", projectSlug: "cephalon-ordis",
     });
   });
 
@@ -29,6 +29,10 @@ describe("command execution", () => {
   it("supports safe pipeline filtering", () => {
     const result = executeTerminalCommand("projects | grep M0AZ", context);
     expect(result.lines.join("\n")).toContain("M0AZ_OS");
+  });
+
+  it("supports work as the recruiter-facing projects alias", () => {
+    expect(executeTerminalCommand("work", context).effect?.navigate).toEqual({ section: "projects" });
   });
 
   it("suggests likely commands and completes known prefixes", () => {

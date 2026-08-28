@@ -16,6 +16,7 @@ function formatTime(date: Date) {
 export function StatusBar() {
   const { state, dispatch } = useSystem();
   const [time, setTime] = useState("--:--");
+  const isLight = state.theme === "light";
 
   useEffect(() => {
     const update = () => setTime(formatTime(new Date()));
@@ -46,6 +47,9 @@ export function StatusBar() {
           aria-pressed={state.soundEnabled}
         >
           SND {state.soundEnabled ? "ON" : "OFF"}
+        </button>
+        <button type="button" className="status-control theme-toggle" onClick={() => dispatch({ type: "SET_THEME", theme: isLight ? "phosphor" : "light" })} aria-pressed={isLight} aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}>
+          {isLight ? "DARK" : "LIGHT"} MODE
         </button>
         <time>{time}</time>
       </div>

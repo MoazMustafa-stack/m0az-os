@@ -48,7 +48,7 @@ interface CommandDefinition {
 export const commandDefinitions: CommandDefinition[] = [
   { name: "help", description: "list documented commands" },
   { name: "about", description: "display profile" },
-  { name: "projects", description: "list deployed work" },
+  { name: "projects", aliases: ["work"], description: "list flagship work" },
   { name: "project", description: "open project by id or slug" },
   { name: "research", description: "inspect research work" },
   { name: "experience", description: "show engineering timeline" },
@@ -68,7 +68,7 @@ export const commandDefinitions: CommandDefinition[] = [
   { name: "uptime", description: "show portfolio session uptime" },
   { name: "whoami", description: "display current shell identity" },
   { name: "hostname", description: "display current host" },
-  { name: "theme", description: "set phosphor, amber, or ice" },
+  { name: "theme", description: "set light, phosphor, amber, or ice" },
   { name: "sound", description: "toggle restrained interface audio" },
   { name: "neofetch", description: "display system profile" },
   { name: "top", description: "show skill processes" },
@@ -112,7 +112,10 @@ for (const definition of commandDefinitions) {
 }
 
 const sectionIds: SectionId[] = ["home", "about", "projects", "experience", "research", "skills", "resume", "contact", "lab"];
-const sectionFor = (value: string) => sectionIds.find((section) => section === value.replace(/^\//, "").toLowerCase());
+const sectionFor = (value: string) => {
+  const normalized = value.replace(/^\//, "").toLowerCase();
+  return normalized === "work" ? "projects" : sectionIds.find((section) => section === normalized);
+};
 
 function duration(startedAt: number) {
   const seconds = Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
@@ -147,7 +150,7 @@ function executeStage(stage: ParsedStage, context: CommandContext, stdin: string
     return { lines: [`command not found: ${command}`, ...(suggestion?.distance <= 3 ? ["", `Did you mean: ${suggestion.name}`] : ["Type 'help' for available commands."])], error: true };
   }
 
-  if (command === "help") return { lines: ["AVAILABLE COMMANDS", "", "Navigation", "  about  projects  research  experience  skills  contact  resume", "", "Filesystem", "  ls  cd  pwd  cat  tree  open  grep", "", "System", "  neofetch  top  uptime  history  clear  theme  sound", "", "Project hosts", "  ssh <project>  git log  architecture  stack  decisions  back", "", "Use: man <command>     Tab completes names and paths."] };
+  if (command === "help") return { lines: ["AVAILABLE COMMANDS", "", "Primary navigation", "  work  experience  about  contact", "", "Explore", "  projects  research  skills  resume  open lab", "", "Filesystem", "  ls  cd  pwd  cat  tree  open  grep", "", "System", "  neofetch  top  uptime  history  clear  theme  sound", "", "Project hosts", "  ssh <project>  git log  architecture  stack  decisions  back", "", "Use: man <command>     Tab completes names and paths."] };
   if (command === "clear") return { lines: [], effect: { clear: true } };
   if (command === "pwd") return { lines: [context.cwd] };
   if (command === "hostname") return { lines: [context.host] };
@@ -210,8 +213,8 @@ function executeStage(stage: ParsedStage, context: CommandContext, stdin: string
 
   if (command === "theme") {
     const theme = stage.args[0] as ThemeId | undefined;
-    if (!theme) return { lines: [`theme: ${context.theme}`, "available: phosphor amber ice"] };
-    if (!["phosphor", "amber", "ice"].includes(theme)) return { lines: [`theme: unknown variant ${theme}`], error: true };
+    if (!theme) return { lines: [`theme: ${context.theme}`, "available: light phosphor amber ice"] };
+    if (!["light", "phosphor", "amber", "ice"].includes(theme)) return { lines: [`theme: unknown variant ${theme}`], error: true };
     return { lines: [`theme switched: ${theme}`], effect: { theme } };
   }
   if (command === "sound") {
@@ -298,7 +301,7 @@ export function completeInput(input: string, cwd: string) {
   const prefix = match[1];
   const partial = match[2].toLowerCase();
   const isFirst = prefix.trim().length === 0;
-  const candidates = isFirst ? commandDefinitions.map(({ name }) => name) : [...projects.map(({ slug }) => slug), ...listDirectory(cwd, true).map((node) => `${node.name}${node.type === "directory" ? "/" : ""}`), "phosphor", "amber", "ice", ...sectionIds];
+  const candidates = isFirst ? commandDefinitions.map(({ name }) => name) : [...projects.map(({ slug }) => slug), ...listDirectory(cwd, true).map((node) => `${node.name}${node.type === "directory" ? "/" : ""}`), "light", "phosphor", "amber", "ice", ...sectionIds];
   const matches = [...new Set(candidates.filter((candidate) => candidate.toLowerCase().startsWith(partial)))].sort();
   return { value: matches.length === 1 ? `${prefix}${matches[0]}${matches[0].endsWith("/") ? "" : " "}` : input, matches };
 }

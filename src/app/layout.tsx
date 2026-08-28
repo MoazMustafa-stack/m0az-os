@@ -1,44 +1,35 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+
+import { education, siteIdentity, technologyCategories } from "@/content/site";
 import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   metadataBase: SITE_URL,
-  title: {
-    default: "M0AZ_OS — Moaz, software engineer",
-    template: "%s · M0AZ_OS",
-  },
-  description:
-    "A browser-native portfolio operating system by Moaz: product engineering, resilient systems, research, and an actually interactive terminal.",
+  title: { default: "M0AZ_OS — Moaz Mustafa, software engineer", template: "%s · M0AZ_OS" },
+  description: siteIdentity.headline,
   applicationName: "M0AZ_OS",
-  authors: [{ name: "Moaz" }],
-  creator: "Moaz",
-  keywords: ["Moaz", "software engineer", "systems engineering", "product engineering", "Next.js portfolio"],
-  openGraph: {
-    type: "website",
-    title: "M0AZ_OS — Moaz, software engineer",
-    description: "A portfolio that behaves like a small operating system—clickable, indexable, and actually command-driven.",
-    siteName: "M0AZ_OS",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "M0AZ_OS — Moaz, software engineer",
-    description: "A browser-native portfolio operating system.",
-  },
+  authors: [{ name: siteIdentity.name, url: siteIdentity.linkedin }],
+  creator: siteIdentity.name,
+  keywords: [siteIdentity.name, "software engineer", "full-stack engineer", "product engineering", "developer tools", "systems engineering"],
+  openGraph: { type: "website", title: "M0AZ_OS — Moaz Mustafa, software engineer", description: siteIdentity.headline, siteName: "M0AZ_OS" },
+  twitter: { card: "summary_large_image", title: "M0AZ_OS — Moaz Mustafa, software engineer", description: siteIdentity.headline },
   robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" className={geistMono.variable}>
-      <body>{children}</body>
-    </html>
-  );
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: siteIdentity.name,
+    email: `mailto:${siteIdentity.email}`,
+    url: SITE_URL.toString(),
+    sameAs: [siteIdentity.linkedin, siteIdentity.github],
+    jobTitle: "Software Engineer",
+    description: siteIdentity.headline,
+    alumniOf: education.map((item) => ({ "@type": "CollegeOrUniversity", name: item.institution })),
+    knowsAbout: technologyCategories.flatMap((category) => category.items.map((item) => item.name)),
+  };
+
+  return <html lang="en"><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} /></body></html>;
 }

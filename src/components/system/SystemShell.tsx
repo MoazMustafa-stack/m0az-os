@@ -15,13 +15,16 @@ import { Workspace } from "./Workspace";
 function Shell() {
   const { state, dispatch } = useSystem();
   useEffect(() => {
+    if (!state.revealSequence) return;
+    const timer = window.setTimeout(() => dispatch({ type: "SET_REVEAL", active: false }), 1900);
+    return () => window.clearTimeout(timer);
+  }, [dispatch, state.revealSequence]);
+  useEffect(() => {
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         dispatch({ type: "TOGGLE_PALETTE" });
-      } else if (event.key === "Escape" && state.bootVisible) {
-        dispatch({ type: "SET_BOOT", visible: false, complete: true });
-      } else if (event.key === "Escape") {
+      } else if (event.key === "Escape" && !state.bootVisible) {
         dispatch({ type: "TOGGLE_PALETTE", open: false });
       } else if (event.key === "/" && !(event.target instanceof HTMLInputElement)) {
         event.preventDefault();
@@ -32,7 +35,7 @@ function Shell() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [dispatch, state.bootVisible]);
   return (
-    <div className="os-viewport" data-theme={state.theme}>
+    <div className={state.revealSequence ? "os-viewport revealing" : "os-viewport"} data-theme={state.theme}>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <StatusBar />
       <div className="system-frame">
@@ -42,7 +45,7 @@ function Shell() {
       <Terminal />
       <CommandPalette />
       <NotificationCenter />
-      <BootScreen />
+      <BootScreen key={state.bootVisible ? "boot-open" : "boot-closed"} />
       <div className="scanlines" aria-hidden="true" />
     </div>
   );

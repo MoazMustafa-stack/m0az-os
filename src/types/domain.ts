@@ -12,6 +12,64 @@ export type SectionId =
 
 export type ProjectStatus = "ACTIVE" | "STABLE" | "EXPERIMENT";
 
+export interface SiteIdentity {
+  name: string;
+  handle: string;
+  systemName: string;
+  hostname: string;
+  headline: string;
+  role: string;
+  summary: string;
+  currentFocus: string;
+  availability: string;
+  graduation: string;
+  targetRoles: string[];
+  github: string;
+  email: string;
+  linkedin: string;
+  resumePath: string;
+}
+
+export interface NavigationItem {
+  id: SectionId;
+  label: string;
+  path: string;
+  shortcut: string;
+}
+
+export interface EngagementPath {
+  id: "recruiting" | "freelance";
+  audience: string;
+  title: string;
+  description: string;
+  signals: string[];
+  actionLabel: string;
+  actionSection: SectionId;
+  emailLabel: string;
+  emailHref: string;
+}
+
+export interface ProofPoint {
+  id: string;
+  value: string;
+  label: string;
+  detail: string;
+}
+
+export interface EducationItem {
+  institution: string;
+  degree: string;
+  period: string;
+  result: string;
+}
+
+export interface ServiceOffering {
+  id: string;
+  title: string;
+  description: string;
+  deliverables: string[];
+}
+
 export interface ProjectLink {
   label: string;
   href: string;
@@ -25,6 +83,8 @@ export interface ProjectMilestone {
 }
 
 export interface Project {
+  classification: "featured";
+  workType: "PLATFORM" | "EXPERIMENTAL SYSTEM" | "PORTFOLIO PRODUCT";
   id: string;
   slug: string;
   name: string;
@@ -36,12 +96,34 @@ export interface Project {
   stack: string[];
   problem: string;
   solution: string;
+  constraints: string[];
   architecture: string[];
   engineeringHighlights: string[];
   challenges: string[];
+  evidence: string[];
   outcomes: string[];
   links: ProjectLink[];
   milestones: ProjectMilestone[];
+}
+
+export interface ArchiveProject {
+  classification: "archive";
+  id: string;
+  name: string;
+  summary: string;
+  evidence: string;
+  stack: string[];
+  href: string;
+}
+
+export interface PrivateWorkTeaser {
+  classification: "private-teaser";
+  id: string;
+  name: string;
+  summary: string;
+  status: "PRIVATE PROTOTYPE";
+  tags: string[];
+  href: null;
 }
 
 export interface ResearchItem {
@@ -53,11 +135,13 @@ export interface ResearchItem {
 }
 
 export interface ExperienceItem {
-  period: string;
+  company: string;
   role: string;
-  context: string;
+  period: string;
+  location: string;
+  project: string;
   summary: string;
-  highlights: string[];
+  outcomes: string[];
 }
 
 export interface SkillGroup {
@@ -67,11 +151,31 @@ export interface SkillGroup {
   note: string;
 }
 
-export interface NavigationItem {
-  id: SectionId;
+export interface TechnologyItem {
+  name: string;
+  context: string;
+}
+
+export interface TechnologyCategory {
+  id: string;
   label: string;
-  path: string;
-  shortcut: string;
+  description: string;
+  items: TechnologyItem[];
+}
+
+export interface CapabilityEvidence {
+  id: string;
+  title: string;
+  summary: string;
+  evidence: string[];
+  demonstratedIn: string[];
+}
+
+export interface DeliveryStage {
+  id: string;
+  label: string;
+  description: string;
+  outputs: string[];
 }
 
 export interface TerminalEntry {
@@ -94,7 +198,7 @@ export interface Achievement {
   description: string;
 }
 
-export type ThemeId = "phosphor" | "amber" | "ice";
+export type ThemeId = "phosphor" | "light" | "amber" | "ice";
 
 export interface SessionState {
   activeSection: SectionId;
@@ -110,6 +214,7 @@ export interface SessionState {
   paletteOpen: boolean;
   bootVisible: boolean;
   bootComplete: boolean;
+  revealSequence: boolean;
   achievements: AchievementId[];
   discoveredSecrets: string[];
   commandCount: number;

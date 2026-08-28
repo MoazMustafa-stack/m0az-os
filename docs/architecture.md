@@ -30,6 +30,11 @@ Route pages, metadata, sitemap, icons, and structured records stay server-capabl
 reducer state, and localStorage are interactive. Next.js still pre-renders the
 initial Client Component output, so important text exists in static HTML.
 
+Skills data is split into typed capability evidence, technology categories, delivery
+stages, and attention-based skill groups in `src/content/site.ts`. Home, Experience,
+Skills, structured Person metadata, and fictional filesystem files select from those
+same records; no page owns a separate technology list.
+
 ## Persistence
 
 One versioned key, `m0az-os:session`, contains only:
@@ -42,6 +47,20 @@ One versioned key, `m0az-os:session`, contains only:
 It never stores contact form data, machine information, analytics identifiers, or
 terminal output. `reset --local-state --confirm` clears the owned key only.
 
+Boot completion prevents the first-contact prompt from repeating on ordinary return
+visits. A terminal `reboot` deliberately reopens the same bounded prompt.
+
+## Presentation modes
+
+The same semantic modules render in desktop and mobile shells. Desktop uses a
+sidebar plus Explore group; mobile uses a fixed five-tab dock, floating terminal,
+sticky module headers, and card surfaces. This is CSS-driven and does not create a
+second content or navigation model.
+
+Theme state supports a true light palette plus the phosphor, amber, and ice dark
+palettes. The visible mode button, command palette, and safe `theme` terminal command
+all dispatch the same reducer event.
+
 ## Security model
 
 Terminal input never reaches a shell, `eval`, `Function`, dynamic import, API route,
@@ -51,8 +70,9 @@ certificates, reports, and platform state.
 
 ## Accessibility model
 
-Core information is reachable through landmarks and ordinary controls. Command use
-is optional. Terminal transcript is labelled but not an assertive live region; a
+Core information is reachable through landmarks and ordinary controls. First-time
+initialization requires typing one clearly displayed bounded command; after reveal,
+terminal use is optional. Terminal transcript is labelled but not an assertive live region; a
 single polite summary announces completion. Motion and scanlines are removed for
-reduced-motion users, contrast tokens respond to high-contrast preference, and
-focus rings remain visible across themes.
+reduced-motion users, the initialization delay is shortened, contrast tokens respond
+to high-contrast preference, and focus rings remain visible across dark/light themes.

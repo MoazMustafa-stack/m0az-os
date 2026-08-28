@@ -11,7 +11,7 @@ import {
   useReducer,
 } from "react";
 
-import { findProject, navigation } from "@/content/site";
+import { findProject, navigation, secondaryNavigation } from "@/content/site";
 import type {
   AchievementId,
   PersistedSession,
@@ -34,6 +34,7 @@ type SystemEvent =
   | { type: "TOGGLE_PALETTE"; open?: boolean }
   | { type: "TOGGLE_SOUND"; enabled?: boolean }
   | { type: "SET_BOOT"; visible: boolean; complete?: boolean }
+  | { type: "SET_REVEAL"; active: boolean }
   | { type: "SET_STARTED"; startedAt: number }
   | { type: "UNLOCK"; achievement: AchievementId; secret?: string }
   | { type: "SET_ROOT"; enabled: boolean }
@@ -75,6 +76,7 @@ function createInitialState(
     paletteOpen: false,
     bootVisible: false,
     bootComplete: false,
+    revealSequence: false,
     achievements: [],
     discoveredSecrets: [],
     commandCount: 0,
@@ -121,6 +123,8 @@ export function systemReducer(state: SessionState, event: SystemEvent): SessionS
         bootVisible: event.visible,
         bootComplete: event.complete ?? state.bootComplete,
       };
+    case "SET_REVEAL":
+      return { ...state, revealSequence: event.active };
     case "SET_STARTED":
       return { ...state, startedAt: event.startedAt };
     case "UNLOCK":
@@ -194,11 +198,10 @@ export function SystemProvider({
     } catch {
       // A disabled or malformed localStorage must never block the portfolio.
     }
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     dispatch({
       type: "SET_BOOT",
-      visible: !completedBoot && !reducedMotion,
-      complete: completedBoot || reducedMotion,
+      visible: !completedBoot,
+      complete: completedBoot,
     });
     document.documentElement.dataset.m0azReady = "true";
     return () => {
@@ -216,7 +219,8 @@ export function SystemProvider({
         document.title = `${findProject(projectMatch[1])?.name ?? "Project"} · M0AZ_OS`;
         return;
       }
-      const route = navigation.find((item) => item.path === currentPath.replace(/\/$/, "") || (item.path === "/" && currentPath === "/"));
+      const routes = [...navigation, ...secondaryNavigation];
+      const route = routes.find((item) => item.path === currentPath.replace(/\/$/, "") || (item.path === "/" && currentPath === "/"));
       dispatch({ type: "NAVIGATE", section: route?.id ?? "home" });
       dispatch({ type: "SET_DIRECTORY", directory: "/home/moaz", host: "portfolio" });
       document.title = route?.id === "home" || !route ? "M0AZ_OS — Moaz, software engineer" : `${route.label[0]}${route.label.slice(1).toLowerCase()} · M0AZ_OS`;
@@ -255,12 +259,13 @@ export function SystemProvider({
     (section: SectionId, projectSlug?: string | null) => {
       const project = section === "project" ? (projectSlug ?? null) : null;
       dispatch({ type: "NAVIGATE", section, projectSlug: project });
+      const routes = [...navigation, ...secondaryNavigation];
       const path = project
         ? `/projects/${project}`
-        : navigation.find((item) => item.id === section)?.path ?? `/${section}`;
+        : routes.find((item) => item.id === section)?.path ?? `/${section}`;
       if (window.location.pathname !== path) {
         window.history.pushState({ m0az: true }, "", path);
-        const label = project ? findProject(project)?.name ?? "Project" : navigation.find((item) => item.id === section)?.label ?? "M0AZ_OS";
+        const label = project ? findProject(project)?.name ?? "Project" : routes.find((item) => item.id === section)?.label ?? "M0AZ_OS";
         document.title = section === "home"
           ? "M0AZ_OS — Moaz, software engineer"
           : project

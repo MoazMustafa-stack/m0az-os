@@ -1,267 +1,79 @@
 "use client";
 
-import {
-  experience,
-  graveyard,
-  projects,
-  research,
-  siteIdentity,
-  skillGroups,
-} from "@/content/site";
+import { archiveProjects, capabilityEvidence, deliveryStages, education, engagementPaths, experience, freelanceEmailHref, graveyard, privateWork, projects, proofPoints, recruiterEmailHref, research, services, siteIdentity, skillGroups, technologyCategories } from "@/content/site";
 import { useSystem } from "./SystemProvider";
 
 function ModuleHeader({ index, label, path }: { index: string; label: string; path: string }) {
-  return (
-    <header className="module-header">
-      <div>
-        <p className="eyebrow">MODULE {index}</p>
-        <h1>{label}<span className="blink">_</span></h1>
-      </div>
-      <p className="module-path">{path}</p>
-    </header>
-  );
+  return <header className="module-header"><div><p className="eyebrow">MODULE {index}</p><h1>{label}<span className="blink">_</span></h1></div><p className="module-path">{path}</p></header>;
+}
+
+function SectionHeading({ eyebrow, title, id }: { eyebrow: string; title: string; id?: string }) {
+  return <div className="section-heading"><p className="eyebrow">{eyebrow}</p><h2 id={id}>{title}</h2></div>;
 }
 
 function HomeModule() {
   const { navigate, dispatch } = useSystem();
-  return (
-    <section className="module home-module" aria-labelledby="home-title">
-      <div className="home-grid">
-        <div className="home-copy">
-          <p className="prompt-line">moaz@portfolio:~$ ./whoami --verbose</p>
-          <p className="boot-ok">[ IDENTITY RESOLVED ]</p>
-          <h1 id="home-title">I build systems people can <em>understand.</em></h1>
-          <p className="lede">{siteIdentity.summary}</p>
-          <div className="action-row">
-            <button className="primary-action" type="button" onClick={() => navigate("projects")}>
-              <span>VIEW PROJECTS</span><b aria-hidden="true">→</b>
-            </button>
-            <button className="text-action" type="button" onClick={() => navigate("resume")}>
-              READ RESUME
-            </button>
-          </div>
-        </div>
-        <aside className="identity-card" aria-label="Profile summary">
-          <div className="avatar-grid" aria-hidden="true">
-            <span>M0</span><span>AZ</span>
-          </div>
-          <dl>
-            <div><dt>USER</dt><dd>{siteIdentity.name}</dd></div>
-            <div><dt>ROLE</dt><dd>Software engineer</dd></div>
-            <div><dt>FOCUS</dt><dd>Systems / Product / Research</dd></div>
-            <div><dt>STATUS</dt><dd><i className="status-dot" /> Building</dd></div>
-          </dl>
-        </aside>
-      </div>
-      <div className="focus-strip">
-        <span className="strip-label">CURRENT_FOCUS</span>
-        <p>{siteIdentity.currentFocus}</p>
-        <button type="button" onClick={() => dispatch({ type: "TOGGLE_TERMINAL", expanded: true })}>
-          OPEN TERMINAL <span aria-hidden="true">↗</span>
-        </button>
-      </div>
-    </section>
-  );
+  return <section className="module home-module" aria-labelledby="home-title">
+    <div className="home-grid"><div className="home-copy"><p className="prompt-line">moaz@portfolio:~$ ./whoami --recruiter-readable</p><p className="boot-ok">[ AVAILABLE FOR OPPORTUNITIES ]</p><h1 id="home-title">{siteIdentity.headline}</h1><p className="lede">{siteIdentity.summary}</p><p className="availability-line">{siteIdentity.availability} {siteIdentity.graduation}. Available for focused freelance engagements.</p><div className="action-row"><button className="primary-action" type="button" onClick={() => navigate("projects")}><span>EXPLORE WORK</span><b aria-hidden="true">→</b></button><button className="text-action" type="button" onClick={() => dispatch({ type: "TOGGLE_TERMINAL", expanded: true })}>OPEN TERMINAL</button></div></div><aside className="identity-card" aria-label="Profile summary"><div className="avatar-grid" aria-hidden="true"><span>M0</span><span>AZ</span></div><dl><div><dt>USER</dt><dd>{siteIdentity.name}</dd></div><div><dt>ROLES</dt><dd>Software / Full-stack / Product</dd></div><div><dt>MARKET</dt><dd>India primary · GCC · Remote</dd></div><div><dt>STATUS</dt><dd><i className="status-dot" /> Open</dd></div></dl></aside></div>
+    <section className="home-section" aria-labelledby="paths-title"><SectionHeading eyebrow="START HERE" title="Choose the shortest path to useful evidence." id="paths-title" /><div className="engagement-grid">{engagementPaths.map((path) => <article className="engagement-card" key={path.id}><p className="eyebrow">{path.audience}</p><h3>{path.title}</h3><p>{path.description}</p><ul>{path.signals.map((signal) => <li key={signal}>{signal}</li>)}</ul><div className="card-actions"><button className="text-action" type="button" onClick={() => navigate(path.actionSection)}>{path.actionLabel}</button>{path.id === "recruiting" ? <a className="text-action" href={siteIdentity.resumePath} download>DOWNLOAD RÉSUMÉ</a> : <a className="text-action" href={path.emailHref}>{path.emailLabel}</a>}</div></article>)}</div></section>
+    <section className="home-section" aria-labelledby="evidence-title"><SectionHeading eyebrow="VERIFIED SIGNALS" title="Evidence before adjectives." id="evidence-title" /><div className="proof-grid">{proofPoints.map((point) => <article key={point.id}><strong>{point.value}</strong><span>{point.label}</span><p>{point.detail}</p></article>)}</div></section>
+    <section className="home-section" aria-labelledby="ownership-title"><div className="section-heading inline-heading"><div><p className="eyebrow">WHAT I CAN OWN</p><h2 id="ownership-title">Capabilities connected to real evidence.</h2></div><button className="text-action" type="button" onClick={() => navigate("skills")}>EXPLORE SKILLS</button></div><div className="ownership-grid">{capabilityEvidence.slice(0, 4).map((capability) => <article key={capability.id}><span>{capability.id}</span><h3>{capability.title}</h3><p>{capability.summary}</p><small>{capability.demonstratedIn.join(" · ")}</small></article>)}</div></section>
+    <section className="home-section" aria-labelledby="featured-title"><div className="section-heading inline-heading"><div><p className="eyebrow">FEATURED WORK</p><h2 id="featured-title">Three systems, three kinds of proof.</h2></div><button className="text-action" type="button" onClick={() => navigate("projects")}>VIEW ALL WORK</button></div><div className="featured-grid">{projects.map((project) => <button type="button" key={project.slug} onClick={() => navigate("project", project.slug)}><span>{project.id} / {project.status}</span><h3>{project.name}</h3><p>{project.oneLineDescription}</p><b>READ CASE STUDY →</b></button>)}</div></section>
+    <section className="final-cta"><div><p className="eyebrow">NEXT STEP</p><h2>Have a role or a scoped project in mind?</h2></div><div className="action-row"><a className="primary-action" href={recruiterEmailHref}>EMAIL ABOUT A ROLE</a><a className="text-action" href={freelanceEmailHref}>DISCUSS A PROJECT</a></div></section>
+  </section>;
 }
 
 function AboutModule() {
-  return (
-    <article className="module prose-module">
-      <ModuleHeader index="01" label="ABOUT" path="~/about/bio.md" />
-      <div className="prose-grid">
-        <div>
-          <p className="drop-line">SYSTEM PROFILE</p>
-          <p className="large-copy">{siteIdentity.role}</p>
-          <p>{siteIdentity.summary}</p>
-          <p>
-            My default mode is to make hidden behavior visible: state boundaries,
-            failure modes, operating assumptions, and the decisions that shape a product.
-          </p>
-        </div>
-        <dl className="fact-list">
-          <div><dt>VALUES</dt><dd>Clarity · resilience · craft</dd></div>
-          <div><dt>METHOD</dt><dd>Observe → model → build → verify</dd></div>
-          <div><dt>INTERESTS</dt><dd>Systems, product engineering, HCI, research</dd></div>
-          <div><dt>NOW</dt><dd>{siteIdentity.currentFocus}</dd></div>
-        </dl>
-      </div>
-    </article>
-  );
+  return <article className="module prose-module"><ModuleHeader index="04" label="ABOUT" path="~/about/bio.md" /><div className="prose-grid"><div><p className="drop-line">ENGINEERING PHILOSOPHY</p><p className="large-copy">Build systems that remain understandable when the happy path ends.</p><p>{siteIdentity.summary}</p><p>My default mode is to expose hidden behavior: state boundaries, failure modes, operating assumptions, and the decisions that shape a product. I enjoy work that connects product judgment to systems thinking, then proves the result through tests and observable behavior.</p><p>I am currently exploring local-first developer tools, spatial computing interfaces, reliability, edge AI, and the ways thoughtful interaction design can make complex systems easier to operate.</p></div><dl className="fact-list"><div><dt>TARGET ROLES</dt><dd>{siteIdentity.targetRoles.join(" · ")}</dd></div><div><dt>VALUES</dt><dd>Clarity · resilience · craft</dd></div><div><dt>METHOD</dt><dd>Observe → model → build → verify</dd></div><div><dt>NOW</dt><dd>{siteIdentity.currentFocus}</dd></div><div><dt>AVAILABILITY</dt><dd>{siteIdentity.availability}</dd></div></dl></div></article>;
 }
 
 function ProjectsModule() {
   const { navigate } = useSystem();
-  return (
-    <section className="module">
-      <ModuleHeader index="02" label="PROJECTS" path="~/projects" />
-      <div className="table-labels" aria-hidden="true">
-        <span>ID / PROJECT</span><span>DOMAIN</span><span>STATUS</span>
-      </div>
-      <div className="project-list">
-        {projects.map((project) => (
-          <button
-            className="project-row"
-            key={project.slug}
-            type="button"
-            onClick={() => navigate("project", project.slug)}
-          >
-            <span className="project-title"><b>{project.id}</b><span><strong>{project.name}</strong><small>{project.oneLineDescription}</small></span></span>
-            <span>{project.category}</span>
-            <span className={`status-pill status-${project.status.toLowerCase()}`}>{project.status}</span>
-          </button>
-        ))}
-      </div>
-      <p className="module-footnote">TIP: type <code>ssh &lt;project&gt;</code> to mount a project environment.</p>
-    </section>
-  );
+  return <section className="module"><ModuleHeader index="02" label="WORK" path="~/projects" /><p className="section-intro work-intro">Browse by the kind of system, the problem it addresses, and the evidence it produced. Each flagship opens into a complete engineering case study.</p><div className="flagship-grid">{projects.map((project) => <button className="flagship-card" key={project.slug} type="button" onClick={() => navigate("project", project.slug)}><header><span>{project.id} / {project.workType}</span><span className={`status-pill status-${project.status.toLowerCase()}`}>{project.status}</span></header><div><p className="eyebrow">{project.category}</p><h2>{project.name}</h2><p>{project.oneLineDescription}</p></div><dl><div><dt>PROBLEM</dt><dd>{project.problem}</dd></div><div><dt>EVIDENCE</dt><dd>{project.evidence[0]}</dd></div></dl><ul>{project.stack.slice(0, 5).map((item) => <li key={item}>{item}</li>)}</ul><b>OPEN FULL CASE STUDY →</b></button>)}</div>
+    <section className="work-section" aria-labelledby="archive-title"><SectionHeading eyebrow="PROJECT ARCHIVE" title="Focused builds and research prototypes." id="archive-title" /><div className="archive-grid">{archiveProjects.map((project) => <a key={project.id} href={project.href} target="_blank" rel="noreferrer"><span>{project.id} / SOURCE ↗</span><h3>{project.name}</h3><p>{project.summary}</p><strong>{project.evidence}</strong><ul>{project.stack.map((item) => <li key={item}>{item}</li>)}</ul></a>)}</div></section>
+    <section className="work-section" aria-labelledby="private-title"><SectionHeading eyebrow="PRIVATE WIP" title="Public problem statement, intentionally private implementation." id="private-title" />{privateWork.map((project) => <article className="private-teaser" key={project.id}><span>{project.id} / {project.status}</span><h3>{project.name}</h3><p>{project.summary}</p><ul>{project.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul><small>LINKS DISABLED · PRIVATE PROTOTYPE</small></article>)}</section>
+    <div className="context-links"><button className="text-action" type="button" onClick={() => navigate("research")}>EXPLORE RESEARCH</button><button className="text-action" type="button" onClick={() => navigate("lab")}>OPEN THE LAB</button></div><p className="module-footnote">TIP: type <code>work</code> or <code>ssh &lt;project&gt;</code> in the terminal.</p>
+  </section>;
 }
 
 function ProjectModule({ slug }: { slug: string | null }) {
   const { navigate, dispatch } = useSystem();
   const project = projects.find((item) => item.slug === slug) ?? projects[0];
-  return (
-    <article className="module project-detail">
-      <button className="back-link" type="button" onClick={() => navigate("projects")}>← BACK TO PROJECTS</button>
-      <div className="project-hero">
-        <div>
-          <p className="eyebrow">PROJECT {project.id} / {project.status}</p>
-          <h1>{project.name}</h1>
-          <p className="lede">{project.oneLineDescription}</p>
-        </div>
-        <dl className="project-meta">
-          <div><dt>ROLE</dt><dd>{project.role}</dd></div>
-          <div><dt>PERIOD</dt><dd>{project.period}</dd></div>
-          <div><dt>STACK</dt><dd>{project.stack.join(" · ")}</dd></div>
-        </dl>
-      </div>
-      <div className="case-grid">
-        <section><span>01 // PROBLEM</span><p>{project.problem}</p></section>
-        <section><span>02 // SOLUTION</span><p>{project.solution}</p></section>
-        <section className="wide"><span>03 // ARCHITECTURE</span><ol>{project.architecture.map((item) => <li key={item}>{item}</li>)}</ol></section>
-        <section><span>04 // ENGINEERING</span><ul>{project.engineeringHighlights.map((item) => <li key={item}>{item}</li>)}</ul></section>
-        <section><span>05 // CHALLENGES</span><ul>{project.challenges.map((item) => <li key={item}>{item}</li>)}</ul></section>
-        <section className="wide"><span>06 // RESULTS</span><ul>{project.outcomes.map((item) => <li key={item}>{item}</li>)}</ul></section>
-      </div>
-      <div className="action-row">
-        <button
-          className="primary-action"
-          type="button"
-          onClick={() => dispatch({ type: "TOGGLE_TERMINAL", expanded: true })}
-        >MOUNT PROJECT HOST <b aria-hidden="true">→</b></button>
-        {project.links.map((link) => <a className="text-action" href={link.href} key={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}
-      </div>
-    </article>
-  );
+  return <article className="module project-detail"><button className="back-link" type="button" onClick={() => navigate("projects")}>← BACK TO WORK</button><div className="project-hero"><div><p className="eyebrow">PROJECT {project.id} / {project.status}</p><h1>{project.name}</h1><p className="lede">{project.oneLineDescription}</p></div><dl className="project-meta"><div><dt>ROLE</dt><dd>{project.role}</dd></div><div><dt>PERIOD</dt><dd>{project.period}</dd></div><div><dt>STATUS</dt><dd>{project.status}</dd></div><div><dt>STACK</dt><dd>{project.stack.join(" · ")}</dd></div></dl></div><div className="case-grid"><section><span>01 // PROBLEM</span><p>{project.problem}</p></section><section><span>02 // RESPONSE</span><p>{project.solution}</p></section><section className="wide"><span>03 // CONSTRAINTS</span><ul>{project.constraints.map((item) => <li key={item}>{item}</li>)}</ul></section><section className="wide"><span>04 // ARCHITECTURE</span><ol>{project.architecture.map((item) => <li key={item}>{item}</li>)}</ol></section><section><span>05 // KEY DECISIONS</span><ul>{project.engineeringHighlights.map((item) => <li key={item}>{item}</li>)}</ul></section><section><span>06 // ENGINEERING CHALLENGES</span><ul>{project.challenges.map((item) => <li key={item}>{item}</li>)}</ul></section><section><span>07 // EVIDENCE</span><ul>{project.evidence.map((item) => <li key={item}>{item}</li>)}</ul></section><section><span>08 // OUTCOMES</span><ul>{project.outcomes.map((item) => <li key={item}>{item}</li>)}</ul></section></div><div className="action-row"><button className="primary-action" type="button" onClick={() => dispatch({ type: "TOGGLE_TERMINAL", expanded: true })}>MOUNT PROJECT HOST <b aria-hidden="true">→</b></button>{project.links.map((link) => <a className="text-action" href={link.href} key={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div></article>;
 }
 
 function ExperienceModule() {
-  return (
-    <section className="module">
-      <ModuleHeader index="03" label="EXPERIENCE" path="~/experience/timeline.md" />
-      <div className="timeline">
-        {experience.map((item, index) => (
-          <article className="timeline-item" key={item.role}>
-            <div className="timeline-marker"><span>{String(index + 1).padStart(2, "0")}</span></div>
-            <div>
-              <p className="eyebrow">{item.period} · {item.context}</p>
-              <h2>{item.role}</h2>
-              <p>{item.summary}</p>
-              <ul>{item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
-            </div>
-          </article>
-        ))}
-      </div>
-      <p className="privacy-note">Publication boundary: organization names and private résumé details are added only after owner review.</p>
-    </section>
-  );
+  const { navigate } = useSystem();
+  return <section className="module"><ModuleHeader index="03" label="EXPERIENCE" path="~/experience/timeline.md" /><div className="timeline">{experience.map((item, index) => <article className="timeline-item" key={`${item.company}-${item.role}`}><div className="timeline-marker"><span>{String(index + 1).padStart(2, "0")}</span></div><div><p className="eyebrow">{item.period} · {item.location}</p><h2>{item.company} — {item.role}</h2><p><strong>{item.project}</strong></p><p>{item.summary}</p><ul>{item.outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul></div></article>)}</div>
+    <section className="experience-section"><SectionHeading eyebrow="EDUCATION" title="Academic foundation." />{education.map((item) => <article className="education-card" key={item.institution}><div><h3>{item.institution}</h3><p>{item.degree}</p></div><div><strong>{item.period}</strong><span>{item.result}</span></div></article>)}</section>
+    <section className="experience-section"><div className="section-heading inline-heading"><div><p className="eyebrow">DEMONSTRATED CAPABILITY</p><h2>Skills grouped by how they create value.</h2></div><button className="text-action" type="button" onClick={() => navigate("skills")}>VIEW CAPABILITY MAP</button></div><div className="capability-grid">{skillGroups.map((group) => <article key={group.name}><h3>{group.name.replaceAll("-", " ")}</h3><p>{group.note}</p><ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></section>
+    <div className="resume-actions"><div><p className="eyebrow">RÉSUMÉ</p><h2>Readable here. Downloadable unchanged.</h2></div><div className="action-row"><button className="text-action" type="button" onClick={() => navigate("resume")}>READ WEB RÉSUMÉ</button><a className="primary-action" href={siteIdentity.resumePath} download>DOWNLOAD PDF</a></div></div>
+  </section>;
 }
 
-function ResearchModule() {
-  return (
-    <section className="module">
-      <ModuleHeader index="04" label="RESEARCH" path="~/research" />
-      <div className="research-grid">
-        {research.map((item) => (
-          <article className="research-card" key={item.id}>
-            <div><span>{item.id}</span><b>{item.status}</b></div>
-            <h2>{item.title}</h2><p>{item.abstract}</p>
-            <ul>{item.tags.map((tag) => <li key={tag}>#{tag}</li>)}</ul>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
+function ResearchModule() { return <section className="module"><ModuleHeader index="R1" label="RESEARCH" path="~/research" /><div className="research-grid">{research.map((item) => <article className="research-card" key={item.id}><div><span>{item.id}</span><b>{item.status}</b></div><h2>{item.title}</h2><p>{item.abstract}</p><ul>{item.tags.map((tag) => <li key={tag}>#{tag}</li>)}</ul></article>)}</div></section>; }
 function SkillsModule() {
-  return (
-    <section className="module">
-      <ModuleHeader index="05" label="PROCESS LOAD" path="~/skills --active" />
-      <p className="section-intro">These are working areas, not scientific competency scores. LOAD describes current attention.</p>
-      <div className="process-table">
-        <div className="process-head"><span>PID</span><span>LOAD</span><span>PROCESS</span><span>WORKING SET</span></div>
-        {skillGroups.map((group, index) => (
-          <article key={group.name}>
-            <span>{101 + index}</span><strong>{group.load}</strong><h2>{group.name}</h2>
-            <div><p>{group.note}</p><ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul></div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+  const { navigate } = useSystem();
+  return <section className="module skills-module"><ModuleHeader index="S1" label="SKILLS & CAPABILITIES" path="~/skills --evidence" /><p className="section-intro">A practical map of what I can own, the technologies I use, and the work that demonstrates each claim. Technology lists describe context—not self-scored proficiency.</p>
+    <section className="skills-section" aria-labelledby="capability-map-title"><SectionHeading eyebrow="CAPABILITY MAP" title="What I can take responsibility for." id="capability-map-title" /><div className="capability-map">{capabilityEvidence.map((capability) => <article key={capability.id}><header><span>{capability.id}</span><h3>{capability.title}</h3></header><p>{capability.summary}</p><ul>{capability.evidence.map((item) => <li key={item}>{item}</li>)}</ul><footer><b>DEMONSTRATED IN</b><span>{capability.demonstratedIn.join(" · ")}</span></footer></article>)}</div></section>
+    <section className="skills-section" aria-labelledby="technology-title"><SectionHeading eyebrow="TECHNOLOGY INVENTORY" title="Languages, platforms, and developer tools in context." id="technology-title" /><div className="technology-grid">{technologyCategories.map((category) => <article className="technology-card" key={category.id}><header><span>{category.id}</span><div><h3>{category.label}</h3><p>{category.description}</p></div></header><dl>{category.items.map((item) => <div key={item.name}><dt>{item.name}</dt><dd>{item.context}</dd></div>)}</dl></article>)}</div></section>
+    <section className="skills-section" aria-labelledby="delivery-title"><SectionHeading eyebrow="DELIVERY RANGE" title="From unclear problem to operable handoff." id="delivery-title" /><p className="section-copy">I can join for one stage or carry a scoped engagement through the full cycle.</p><ol className="delivery-flow">{deliveryStages.map((stage, index) => <li key={stage.id}><span>{String(index + 1).padStart(2, "0")}</span><h3>{stage.label}</h3><p>{stage.description}</p><small>{stage.outputs.join(" · ")}</small></li>)}</ol></section>
+    <section className="skills-section working-set" aria-labelledby="working-set-title"><SectionHeading eyebrow="CURRENT WORKING SET" title="Where attention is concentrated now." id="working-set-title" /><div className="process-table"><div className="process-head"><span>PID</span><span>LOAD</span><span>CAPABILITY</span><span>WORKING SET</span></div>{skillGroups.map((group, index) => <article key={group.name}><span>{101 + index}</span><strong>{group.load}</strong><h2>{group.name}</h2><div><p>{group.note}</p><ul>{group.items.map((item) => <li key={item}>{item}</li>)}</ul></div></article>)}</div></section>
+    <div className="skills-cta"><div><p className="eyebrow">FOLLOW THE EVIDENCE</p><h2>See the architecture, decisions, and outcomes.</h2></div><div className="action-row"><button className="primary-action" type="button" onClick={() => navigate("projects")}>EXPLORE WORK</button><button className="text-action" type="button" onClick={() => navigate("contact")}>DISCUSS A FIT</button></div></div>
+  </section>;
 }
-
-function LabModule() {
-  return (
-    <section className="module">
-      <ModuleHeader index="06" label="LAB" path="~/lab" />
-      <div className="lab-intro"><p>Experiments can be valuable before they are polished. The lab keeps incomplete work honest and inspectable.</p><code>ls -la ~/lab</code></div>
-      <div className="lab-grid">
-        <article><span>drwxr-xr-x</span><h2>experiments/</h2><p>Bounded questions, simulators, and interaction probes.</p></article>
-        <article><span>drwxr-xr-x</span><h2>prototypes/</h2><p>Small systems that test one architectural claim at a time.</p></article>
-        <article className="graveyard-card"><span>drwx------</span><h2>.graveyard/</h2><p>{graveyard.length} archived ideas. Discoverable from the shell.</p></article>
-      </div>
-    </section>
-  );
-}
+function LabModule() { return <section className="module"><ModuleHeader index="L1" label="LAB" path="~/lab" /><div className="lab-intro"><p>Experiments can be valuable before they are polished. The lab keeps incomplete work honest and inspectable.</p><code>ls -la ~/lab</code></div><div className="lab-grid"><article><span>drwxr-xr-x</span><h2>experiments/</h2><p>Bounded questions, simulators, and interaction probes.</p></article><article><span>drwxr-xr-x</span><h2>prototypes/</h2><p>Small systems that test one architectural claim at a time.</p></article><article className="graveyard-card"><span>drwx------</span><h2>.graveyard/</h2><p>{graveyard.length} archived ideas. Discoverable from the shell.</p></article></div></section>; }
 
 function ContactModule() {
-  return (
-    <section className="module contact-module">
-      <ModuleHeader index="07" label="CONTACT" path="~/contact" />
-      <div className="contact-grid">
-        <div><p className="large-copy">Start a useful conversation.</p><p>For engineering, research, or thoughtful collaboration, the public GitHub channel is online. Private channels stay offline until the owner explicitly configures a publication-safe address.</p></div>
-        <div className="channel-list">
-          <a href={siteIdentity.github} target="_blank" rel="noreferrer"><span>01</span><strong>GITHUB</strong><small>ONLINE</small><b>↗</b></a>
-          <div aria-disabled="true"><span>02</span><strong>EMAIL</strong><small>NOT CONFIGURED</small><b>—</b></div>
-          <div aria-disabled="true"><span>03</span><strong>LINKEDIN</strong><small>NOT CONFIGURED</small><b>—</b></div>
-        </div>
-      </div>
-    </section>
-  );
+  return <section className="module contact-module"><ModuleHeader index="05" label="CONTACT" path="~/contact" /><div className="contact-intro"><div><p className="eyebrow">AVAILABLE REMOTELY</p><p className="large-copy">Build the product, unblock the system, or pressure-test the plan.</p></div><p>Typical freelance engagements are scoped, remote, and approximately two to eight weeks. Shorter architecture, reliability, performance, debugging, and documentation consultations are also available. Pricing is scoped after the problem is understood.</p></div><section className="services-section" aria-labelledby="services-title"><SectionHeading eyebrow="SERVICES" title="Three ways to work together." id="services-title" /><div className="services-grid">{services.map((service, index) => <article key={service.id}><span>{String(index + 1).padStart(2, "0")}</span><h3>{service.title}</h3><p>{service.description}</p><ul>{service.deliverables.map((item) => <li key={item}>{item}</li>)}</ul></article>)}</div></section><div className="contact-grid"><div><p className="large-copy">Start with context.</p><p>Share the role or problem, the desired outcome, the current constraints, and your rough timeline. I will respond through the same channel.</p><div className="action-row"><a className="primary-action" href={freelanceEmailHref}>DISCUSS A PROJECT</a><a className="text-action" href={recruiterEmailHref}>EMAIL ABOUT A ROLE</a></div></div><div className="channel-list"><a href={`mailto:${siteIdentity.email}`}><span>01</span><strong>EMAIL</strong><small>{siteIdentity.email}</small><b>→</b></a><a href={siteIdentity.linkedin} target="_blank" rel="noreferrer"><span>02</span><strong>LINKEDIN</strong><small>PROFILE</small><b>↗</b></a><a href={siteIdentity.github} target="_blank" rel="noreferrer"><span>03</span><strong>GITHUB</strong><small>SOURCE</small><b>↗</b></a></div></div></section>;
 }
 
 function ResumeModule() {
-  return (
-    <article className="module resume-module">
-      <ModuleHeader index="R" label="RESUME" path="~/resume" />
-      <div className="resume-sheet">
-        <div><p className="eyebrow">PROFILE</p><h2>{siteIdentity.name}</h2><p>{siteIdentity.role}</p><p>{siteIdentity.summary}</p></div>
-        <div><p className="eyebrow">CORE PRACTICE</p><ul>{skillGroups.flatMap((group) => group.items).slice(0, 10).map((item) => <li key={item}>{item}</li>)}</ul></div>
-        <div><p className="eyebrow">SELECTED WORK</p>{projects.map((project) => <p key={project.slug}><strong>{project.name}</strong><br />{project.oneLineDescription}</p>)}</div>
-      </div>
-      <p className="privacy-note">A downloadable résumé is intentionally not copied from this workstation. Configure a reviewed public PDF in <code>src/content/site.ts</code>.</p>
-    </article>
-  );
+  return <article className="module resume-module"><ModuleHeader index="CV" label="RÉSUMÉ" path="~/resume" /><div className="resume-heading"><div><h2>{siteIdentity.name}</h2><p>{siteIdentity.headline}</p><p>{siteIdentity.availability}</p></div><a className="primary-action" href={siteIdentity.resumePath} download>DOWNLOAD PDF</a></div><div className="resume-sheet"><div><p className="eyebrow">EXPERIENCE</p>{experience.map((item) => <section key={item.company}><h3>{item.company} — {item.role}</h3><p>{item.period} · {item.location}</p><p><strong>{item.project}</strong></p><ul>{item.outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul></section>)}</div><div><p className="eyebrow">EDUCATION</p>{education.map((item) => <section key={item.institution}><h3>{item.institution}</h3><p>{item.degree}<br />{item.period} · {item.result}</p></section>)}</div><div><p className="eyebrow">CAPABILITIES</p>{skillGroups.map((group) => <p key={group.name}><strong>{group.name.replaceAll("-", " ")}</strong><br />{group.items.join(" · ")}</p>)}</div></div><p className="privacy-note">The downloadable PDF is the owner-approved résumé and includes the contact details present in the original document.</p></article>;
 }
 
 export function Workspace() {
   const { state } = useSystem();
-  const modules = {
-    home: <HomeModule />, about: <AboutModule />, projects: <ProjectsModule />,
-    project: <ProjectModule slug={state.activeProjectSlug} />, experience: <ExperienceModule />,
-    research: <ResearchModule />, skills: <SkillsModule />, lab: <LabModule />,
-    contact: <ContactModule />, resume: <ResumeModule />,
-  };
+  const modules = { home: <HomeModule />, about: <AboutModule />, projects: <ProjectsModule />, project: <ProjectModule slug={state.activeProjectSlug} />, experience: <ExperienceModule />, research: <ResearchModule />, skills: <SkillsModule />, lab: <LabModule />, contact: <ContactModule />, resume: <ResumeModule /> };
   return <main className="workspace" id="main-content">{modules[state.activeSection]}</main>;
 }

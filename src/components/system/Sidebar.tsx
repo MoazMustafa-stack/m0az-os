@@ -1,6 +1,6 @@
 "use client";
 
-import { navigation, siteIdentity } from "@/content/site";
+import { navigation, secondaryNavigation, siteIdentity } from "@/content/site";
 import { useSystem } from "./SystemProvider";
 
 export function Sidebar() {
@@ -11,21 +11,24 @@ export function Sidebar() {
       <div>
         <p className="eyebrow">/SYS/NAV</p>
         <nav className="system-nav">
-          {navigation.map((item) => (
+          {navigation.map((item) => {
+            const isActive = state.activeSection === item.id || (item.id === "projects" && state.activeSection === "project");
+            return (
             <button
               key={item.id}
-              className={state.activeSection === item.id ? "nav-item active" : "nav-item"}
+              className={isActive ? "nav-item active" : "nav-item"}
               onClick={() => navigate(item.id)}
               type="button"
               aria-label={item.label}
-              aria-current={state.activeSection === item.id ? "page" : undefined}
+              aria-current={isActive ? "page" : undefined}
             >
               <span className="nav-index">{item.shortcut}</span>
               <span>{item.label}</span>
               <span className="nav-caret" aria-hidden="true">›</span>
             </button>
-          ))}
+          );})}
         </nav>
+        <div className="explore-nav"><p className="eyebrow">EXPLORE</p><nav aria-label="Explore">{secondaryNavigation.map((item) => <button type="button" key={item.id} className={state.activeSection === item.id ? "active" : ""} onClick={() => navigate(item.id)}><span>{item.shortcut}</span>{item.label}</button>)}</nav></div>
       </div>
 
       <div className="sidebar-system" aria-label="Fictional system load">
