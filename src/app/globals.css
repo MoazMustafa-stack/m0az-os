@@ -241,11 +241,10 @@ a { color: inherit; }
 .featured-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .featured-grid button { min-height: 270px; padding: 24px; border: 1px solid var(--border-soft); background: rgba(117,255,112,.018); color: var(--green-muted); cursor: pointer; text-align: left; }
 .featured-grid button:hover { border-color: var(--border); background: rgba(117,255,112,.05); }
-.featured-grid span, .archive-grid > a > span, .private-teaser > span { color: var(--green); font-size: 8px; letter-spacing: .12em; }
+.featured-grid span, .archive-grid > a > span, .archive-grid > article > span, .private-teaser > span { color: var(--green); font-size: 8px; letter-spacing: .12em; }
 .featured-grid h3, .archive-grid h3, .private-teaser h3, .services-grid h3, .capability-grid h3, .education-card h3 { margin: 46px 0 12px; color: var(--green-bright); font-size: 19px; }
 .featured-grid p { min-height: 76px; font-size: 11px; line-height: 1.7; }
 .featured-grid b { color: var(--green); font-size: 8px; letter-spacing: .1em; }
-.featured-grid button:last-child:nth-child(odd), .flagship-grid .flagship-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .final-cta { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-top: clamp(64px, 10vw, 112px); padding: 30px 0 10px; border-top: 1px solid var(--border); }
 .final-cta .action-row { margin: 0; }
 .card-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: auto; }
@@ -274,7 +273,7 @@ a { color: inherit; }
 .module-footnote, .privacy-note { margin-top: 22px; color: var(--green-dim); font-size: 10px; line-height: 1.6; }
 .work-intro { margin-top: -28px; }
 .archive-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--border); border-left: 1px solid var(--border); }
-.archive-grid > a { display: block; min-height: 295px; padding: 26px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); color: var(--green-muted); text-decoration: none; }
+.archive-grid > a, .archive-grid > article { display: block; min-height: 295px; margin: 0; padding: 26px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); color: var(--green-muted); text-decoration: none; }
 .archive-grid > a:hover { background: rgba(117,255,112,.04); }
 .archive-grid h3 { margin-top: 35px; }
 .archive-grid p, .archive-grid strong { font-size: 11px; line-height: 1.65; }
@@ -615,13 +614,12 @@ code { color: var(--green); font-family: inherit; }
   .case-grid { grid-template-columns: 1fr; }
   .case-grid section.wide { grid-column: auto; }
   .research-grid, .lab-grid, .proof-grid, .featured-grid, .archive-grid, .services-grid, .capability-grid, .ownership-grid, .capability-map, .technology-grid, .delivery-flow { grid-template-columns: 1fr; }
-  .featured-grid button:last-child:nth-child(odd), .flagship-grid .flagship-card:last-child:nth-child(odd) { grid-column: auto; }
   .flagship-card { min-height: 520px; padding: 22px; border-radius: 18px; }
   .flagship-card > div { margin-top: 40px; }
   .flagship-card dl div { padding: 14px 0; }
-  .engagement-card, .proof-grid article, .featured-grid button, .archive-grid > a, .private-teaser, .services-grid article, .capability-grid article, .ownership-grid article, .capability-map article, .technology-card, .delivery-flow li, .education-card, .resume-actions, .resume-heading, .case-grid section, .research-card, .lab-grid article { border-radius: 16px; }
+  .engagement-card, .proof-grid article, .featured-grid button, .archive-grid > a, .archive-grid > article, .private-teaser, .services-grid article, .capability-grid article, .ownership-grid article, .capability-map article, .technology-card, .delivery-flow li, .education-card, .resume-actions, .resume-heading, .case-grid section, .research-card, .lab-grid article { border-radius: 16px; }
   .engagement-grid, .proof-grid, .archive-grid, .services-grid, .capability-grid, .resume-sheet, .case-grid { gap: 10px; border: 0; }
-  .engagement-card, .proof-grid article, .archive-grid > a, .services-grid article, .capability-grid article, .resume-sheet > div, .case-grid section { border: 1px solid var(--border-soft); }
+  .engagement-card, .proof-grid article, .archive-grid > a, .archive-grid > article, .services-grid article, .capability-grid article, .resume-sheet > div, .case-grid section { border: 1px solid var(--border-soft); }
   .module p:not(.eyebrow):not(.module-path):not(.prompt-line):not(.boot-ok):not(.privacy-note):not(.module-footnote), .module dd, .module li { font-size: 14px; line-height: 1.75; }
   .section-heading.inline-heading, .final-cta, .resume-actions, .resume-heading, .education-card { align-items: start; flex-direction: column; }
   .featured-grid button { min-height: 230px; }

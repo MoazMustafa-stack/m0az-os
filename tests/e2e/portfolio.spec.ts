@@ -32,9 +32,10 @@ test("five-item navigation opens Work with a shareable URL", async ({ page }) =>
   await page.goto("/projects/lahmah-cuts");
   await expect(page.getByRole("heading", { name: "Lahmah Cuts" })).toBeVisible();
   await expect(page.getByText(/More than 260 automated tests cover/)).toBeVisible();
-  await page.goto("/projects/cyberarch-omarchy");
+  await page.goto("/projects");
   await expect(page.getByRole("heading", { name: "CyberArch × Omarchy" })).toBeVisible();
-  await expect(page.getByText(/Transactional updates retain a last-known-good revision/)).toBeVisible();
+  await expect(page.getByText(/Defines ownership boundaries, configuration validation/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "CyberArch × Omarchy" }).locator("xpath=ancestor::article")).toHaveCount(1);
   await page.goto("/projects/interface-protocols");
   await expect(page).toHaveURL(/\/projects\/velora$/);
   await expect(page.getByRole("heading", { name: "Velora" })).toBeVisible();
