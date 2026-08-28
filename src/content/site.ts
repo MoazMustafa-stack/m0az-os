@@ -81,7 +81,7 @@ export const engagementPaths: EngagementPath[] = [
 export const proofPoints: ProofPoint[] = [
   { id: "commerce-tests", value: "260+", label: "AUTOMATED TESTS", detail: "Release coverage for the Lahmah Cuts commerce platform." },
   { id: "velora-performance", value: "60 FPS", label: "INTEGRATED GRAPHICS", detail: "17.05 ms p95 in Velora's rendered prototype baseline." },
-  { id: "portfolio-verification", value: "20 / 18 / 16", label: "ROUTES / UNIT / E2E", detail: "Static routes, unit/component tests, and desktop/mobile browser flows in M0AZ_OS." },
+  { id: "portfolio-verification", value: "21 / 18 / 16", label: "ROUTES / UNIT / E2E", detail: "Static routes, unit/component tests, and desktop/mobile browser flows in M0AZ_OS." },
 ];
 
 export const education: EducationItem[] = [
@@ -112,6 +112,58 @@ export const services: ServiceOffering[] = [
 export const projects: Project[] = [
   {
     id: "01",
+    classification: "featured",
+    workType: "COMMERCE PLATFORM",
+    slug: "lahmah-cuts",
+    name: "Lahmah Cuts",
+    oneLineDescription: "A production commerce platform connecting customer ordering, operations, payments, and financial reconciliation.",
+    status: "DELIVERED",
+    category: "Commerce and operational systems",
+    period: "May 2026 — July 2026",
+    role: "Software Engineering Intern · full-stack product delivery",
+    stack: ["Next.js", "React", "TypeScript", "Supabase", "PostgreSQL", "Docker", "GitHub Actions"],
+    problem: "A commerce operation needed customer ordering, administrative control, payment handling, fulfillment, and financial records to behave as one reliable product rather than disconnected workflows.",
+    solution: "Deliver an end-to-end platform spanning authentication, checkout, order operations, role-aware administration, verified payment events, refunds, reconciliation, and customer communications.",
+    constraints: [
+      "Keep payment and refund state correct across asynchronous provider webhooks.",
+      "Enforce customer and administrative access at both the application and PostgreSQL boundaries.",
+      "Test financial and operational flows without depending on production data or unsafe write paths.",
+    ],
+    architecture: [
+      "Next.js and React provide customer commerce and role-aware administrative surfaces.",
+      "Supabase and PostgreSQL hold application state behind Row-Level Security and explicit role policies.",
+      "Verified payment webhooks drive receipt, refund, reconciliation, and immutable financial-record workflows.",
+      "Email and WhatsApp delivery connect order events to customer communication paths.",
+      "Dockerized checks, API smoke tests, and GitHub Actions provide repeatable release verification.",
+    ],
+    engineeringHighlights: [
+      "End-to-end authentication, checkout, order management, and administration",
+      "Webhook-verified payments, receipts, refunds, and reconciliation",
+      "Immutable financial records with explicit authorization boundaries",
+      "More than 260 automated tests across critical product flows",
+    ],
+    challenges: [
+      "Keeping financial state consistent through payment, receipt, refund, and reconciliation transitions",
+      "Preventing privileged data access beyond the intended customer and administrative roles",
+      "Making a broad commerce surface safe to change through isolated and automated verification",
+    ],
+    evidence: [
+      "More than 260 automated tests cover customer, administrative, API, and financial behavior.",
+      "The delivery setup combines Row-Level Security, role-based access, Dockerized testing, CI/CD, and API smoke tests.",
+    ],
+    outcomes: [
+      "Delivered secure authentication, checkout, order management, and role-based administrative workflows.",
+      "Designed verified payment, receipt, refund, reconciliation, and immutable financial-record pipelines.",
+      "Established a repeatable release-safety layer around a production commerce platform.",
+    ],
+    links: [],
+    milestones: [
+      { hash: "commerce-core", date: "May 2026", message: "connect customer ordering and operational administration" },
+      { hash: "release-safety", date: "July 2026", message: "harden payments, authorization, and automated release checks" },
+    ],
+  },
+  {
+    id: "02",
     classification: "featured",
     workType: "PLATFORM",
     slug: "cephalon-ordis",
@@ -162,7 +214,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "02",
+    id: "03",
     classification: "featured",
     workType: "EXPERIMENTAL SYSTEM",
     slug: "velora",
@@ -213,7 +265,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "03",
+    id: "04",
     classification: "featured",
     workType: "PORTFOLIO PRODUCT",
     slug: "m0az-os",
@@ -250,7 +302,7 @@ export const projects: Project[] = [
       "Testing hydrated terminal UI without screenshot-induced false warnings",
     ],
     evidence: [
-      "The production build pre-renders 20 static and generated routes.",
+      "The production build pre-renders 21 static and generated routes.",
       "The verification suite grew from 15 unit/component tests and 8 browser flows to 18 unit/component tests and 16 desktop/mobile Chromium flows.",
     ],
     outcomes: [

@@ -16,7 +16,7 @@ const context: CommandContext = {
 describe("command execution", () => {
   it("returns the same project navigation intent as visible UI", () => {
     expect(executeTerminalCommand("project 01", context).effect?.navigate).toEqual({
-      section: "project", projectSlug: "cephalon-ordis",
+      section: "project", projectSlug: "lahmah-cuts",
     });
   });
 

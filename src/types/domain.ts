@@ -10,7 +10,7 @@ export type SectionId =
   | "contact"
   | "lab";
 
-export type ProjectStatus = "ACTIVE" | "STABLE" | "EXPERIMENT";
+export type ProjectStatus = "ACTIVE" | "STABLE" | "EXPERIMENT" | "DELIVERED";
 
 export interface SiteIdentity {
   name: string;
@@ -84,7 +84,7 @@ export interface ProjectMilestone {
 
 export interface Project {
   classification: "featured";
-  workType: "PLATFORM" | "EXPERIMENTAL SYSTEM" | "PORTFOLIO PRODUCT";
+  workType: "PLATFORM" | "COMMERCE PLATFORM" | "EXPERIMENTAL SYSTEM" | "PORTFOLIO PRODUCT";
   id: string;
   slug: string;
   name: string;

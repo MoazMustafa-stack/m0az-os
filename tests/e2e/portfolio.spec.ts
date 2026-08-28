@@ -29,6 +29,9 @@ test("five-item navigation opens Work with a shareable URL", async ({ page }) =>
   await page.getByRole("button", { name: /^work$/i }).first().click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.getByRole("heading", { name: /work/i })).toBeVisible();
+  await page.goto("/projects/lahmah-cuts");
+  await expect(page.getByRole("heading", { name: "Lahmah Cuts" })).toBeVisible();
+  await expect(page.getByText(/More than 260 automated tests cover/)).toBeVisible();
   await page.goto("/projects/interface-protocols");
   await expect(page).toHaveURL(/\/projects\/velora$/);
   await expect(page.getByRole("heading", { name: "Velora" })).toBeVisible();

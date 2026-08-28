@@ -238,7 +238,7 @@ a { color: inherit; }
 .proof-grid strong { display: block; color: var(--green-bright); font-size: clamp(28px, 4vw, 46px); letter-spacing: -.05em; }
 .proof-grid span { display: block; margin-top: 9px; color: var(--green); font-size: 8px; letter-spacing: .14em; }
 .proof-grid p { margin: 30px 0 0; color: var(--green-dim); font-size: 10px; line-height: 1.65; }
-.featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.featured-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .featured-grid button { min-height: 270px; padding: 24px; border: 1px solid var(--border-soft); background: rgba(117,255,112,.018); color: var(--green-muted); cursor: pointer; text-align: left; }
 .featured-grid button:hover { border-color: var(--border); background: rgba(117,255,112,.05); }
 .featured-grid span, .archive-grid > a > span, .private-teaser > span { color: var(--green); font-size: 8px; letter-spacing: .12em; }
@@ -285,12 +285,13 @@ a { color: inherit; }
 .private-teaser p { color: var(--green-muted); line-height: 1.7; }
 .private-teaser small { display: block; margin-top: 26px; color: var(--green-dim); font-size: 8px; letter-spacing: .12em; }
 .context-links { display: flex; gap: 24px; margin-top: 34px; }
-.flagship-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.flagship-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .flagship-card { display: flex; flex-direction: column; min-height: 570px; padding: 25px; border: 1px solid var(--border); background: linear-gradient(160deg, rgba(117,255,112,.045), transparent 42%); color: var(--green-muted); cursor: pointer; text-align: left; }
 .flagship-card:hover { border-color: var(--green); background-color: rgba(117,255,112,.035); transform: translateY(-3px); }
 .flagship-card { animation: card-compile .42s ease-out both; }
 .flagship-card:nth-child(2) { animation-delay: .1s; }
 .flagship-card:nth-child(3) { animation-delay: .2s; }
+.flagship-card:nth-child(4) { animation-delay: .3s; }
 @keyframes card-compile { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .flagship-card > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--green); font-size: 8px; letter-spacing: .11em; }
 .flagship-card h2 { margin: 12px 0 13px; color: var(--green-bright); font-size: clamp(23px, 2.4vw, 33px); letter-spacing: -.04em; }
