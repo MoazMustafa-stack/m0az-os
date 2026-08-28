@@ -81,7 +81,7 @@ export const engagementPaths: EngagementPath[] = [
 export const proofPoints: ProofPoint[] = [
   { id: "commerce-tests", value: "260+", label: "AUTOMATED TESTS", detail: "Release coverage for the Lahmah Cuts commerce platform." },
   { id: "velora-performance", value: "60 FPS", label: "INTEGRATED GRAPHICS", detail: "17.05 ms p95 in Velora's rendered prototype baseline." },
-  { id: "portfolio-verification", value: "21 / 18 / 16", label: "ROUTES / UNIT / E2E", detail: "Static routes, unit/component tests, and desktop/mobile browser flows in M0AZ_OS." },
+  { id: "portfolio-verification", value: "22 / 18 / 16", label: "ROUTES / UNIT / E2E", detail: "Static routes, unit/component tests, and desktop/mobile browser flows in M0AZ_OS." },
 ];
 
 export const education: EducationItem[] = [
@@ -165,6 +165,57 @@ export const projects: Project[] = [
   {
     id: "02",
     classification: "featured",
+    workType: "DESKTOP INTEGRATION",
+    slug: "cyberarch-omarchy",
+    name: "CyberArch × Omarchy",
+    oneLineDescription: "A reversible compatibility manager for running CyberArch inside an Omarchy-managed Hyprland desktop.",
+    status: "ACTIVE",
+    category: "Linux desktop reliability",
+    period: "2026 — present",
+    role: "Systems engineer · integration designer",
+    stack: ["Shell", "Python", "Lua", "QML", "Hyprland", "GTK3", "Linux"],
+    problem: "Layering an alternate desktop shell onto an Omarchy-managed Hyprland system can create conflicting ownership of configuration, packages, services, notifications, and live user state—with no dependable return path when an integration fails.",
+    solution: "Build an independent compatibility manager that detects the host, preserves Omarchy ownership, validates every change, exposes diagnostics, and makes enable, disable, update, and rollback explicit operations.",
+    constraints: [
+      "Treat the Omarchy-managed base system and package ownership as authoritative.",
+      "Back up affected user state before mutation and retain an emergency return path.",
+      "Keep provider failures and optional integrations from taking down the surrounding desktop.",
+    ],
+    architecture: [
+      "A command-line manager owns detection, health checks, configuration, enable/disable, updates, and rollback.",
+      "An explicit ownership model separates the base shell, lock, idle, policy, notification, and optional CyberArch responsibilities.",
+      "A GTK control center presents status, layout, component, data, keybinding, and diagnostic controls.",
+      "Validated settings remain separate from provider caches, operational state, backups, and logs.",
+      "Transactional updates retain a last-known-good revision and expose a deliberate rollback path.",
+    ],
+    engineeringHighlights: [
+      "Reversible enable, disable, toggle, update, and rollback lifecycle",
+      "Pre-mutation backup and last-known-good recovery model",
+      "Host detection, configuration validation, health checks, and diagnostics",
+      "Provider-state handling that distinguishes live, cached, unavailable, and error states",
+    ],
+    challenges: [
+      "Integrating a second shell without taking ownership away from the managed desktop",
+      "Keeping live configuration changes reversible across partial failures",
+      "Making optional data providers useful without hiding stale or unavailable state",
+    ],
+    evidence: [
+      "The manager exposes an inspectable lifecycle from detection and validation through enablement, diagnostics, updates, and rollback.",
+      "Safety boundaries preserve base-system ownership, back up mutations, and keep a standard-desktop recovery path available.",
+    ],
+    outcomes: [
+      "Created a compatibility layer that can be entered, diagnosed, updated, and exited without replacing the managed desktop beneath it.",
+      "Turned desktop ownership and recovery assumptions into explicit, reviewable system behavior.",
+    ],
+    links: [],
+    milestones: [
+      { hash: "ownership-model", date: "2026", message: "define safe boundaries between CyberArch and Omarchy" },
+      { hash: "recovery-path", date: "2026", message: "connect validation, backups, diagnostics, updates, and rollback" },
+    ],
+  },
+  {
+    id: "03",
+    classification: "featured",
     workType: "PLATFORM",
     slug: "cephalon-ordis",
     name: "Cephalon-Ordis",
@@ -214,7 +265,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "03",
+    id: "04",
     classification: "featured",
     workType: "EXPERIMENTAL SYSTEM",
     slug: "velora",
@@ -265,7 +316,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "04",
+    id: "05",
     classification: "featured",
     workType: "PORTFOLIO PRODUCT",
     slug: "m0az-os",
@@ -302,7 +353,7 @@ export const projects: Project[] = [
       "Testing hydrated terminal UI without screenshot-induced false warnings",
     ],
     evidence: [
-      "The production build pre-renders 21 static and generated routes.",
+      "The production build pre-renders 22 static and generated routes.",
       "The verification suite grew from 15 unit/component tests and 8 browser flows to 18 unit/component tests and 16 desktop/mobile Chromium flows.",
     ],
     outcomes: [
@@ -370,8 +421,8 @@ export const capabilityEvidence: CapabilityEvidence[] = [
     id: "C-02",
     title: "Systems architecture and integration",
     summary: "Define explicit process, protocol, state, security, and recovery boundaries across mixed technology stacks.",
-    evidence: ["Durable PostgreSQL event model, cost guards, and approval boundaries in Cephalon-Ordis.", "Typed Unix-socket protocol, reconnect behavior, and Wayland integration in Velora."],
-    demonstratedIn: ["Cephalon-Ordis", "Velora"],
+    evidence: ["Durable PostgreSQL event model, cost guards, and approval boundaries in Cephalon-Ordis.", "Typed IPC and reconnect behavior in Velora; reversible ownership and rollback boundaries in CyberArch × Omarchy."],
+    demonstratedIn: ["Cephalon-Ordis", "Velora", "CyberArch × Omarchy"],
   },
   {
     id: "C-03",

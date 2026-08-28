@@ -245,6 +245,7 @@ a { color: inherit; }
 .featured-grid h3, .archive-grid h3, .private-teaser h3, .services-grid h3, .capability-grid h3, .education-card h3 { margin: 46px 0 12px; color: var(--green-bright); font-size: 19px; }
 .featured-grid p { min-height: 76px; font-size: 11px; line-height: 1.7; }
 .featured-grid b { color: var(--green); font-size: 8px; letter-spacing: .1em; }
+.featured-grid button:last-child:nth-child(odd), .flagship-grid .flagship-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .final-cta { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-top: clamp(64px, 10vw, 112px); padding: 30px 0 10px; border-top: 1px solid var(--border); }
 .final-cta .action-row { margin: 0; }
 .card-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: auto; }
@@ -614,6 +615,7 @@ code { color: var(--green); font-family: inherit; }
   .case-grid { grid-template-columns: 1fr; }
   .case-grid section.wide { grid-column: auto; }
   .research-grid, .lab-grid, .proof-grid, .featured-grid, .archive-grid, .services-grid, .capability-grid, .ownership-grid, .capability-map, .technology-grid, .delivery-flow { grid-template-columns: 1fr; }
+  .featured-grid button:last-child:nth-child(odd), .flagship-grid .flagship-card:last-child:nth-child(odd) { grid-column: auto; }
   .flagship-card { min-height: 520px; padding: 22px; border-radius: 18px; }
   .flagship-card > div { margin-top: 40px; }
   .flagship-card dl div { padding: 14px 0; }

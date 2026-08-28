@@ -84,7 +84,7 @@ export interface ProjectMilestone {
 
 export interface Project {
   classification: "featured";
-  workType: "PLATFORM" | "COMMERCE PLATFORM" | "EXPERIMENTAL SYSTEM" | "PORTFOLIO PRODUCT";
+  workType: "PLATFORM" | "COMMERCE PLATFORM" | "DESKTOP INTEGRATION" | "EXPERIMENTAL SYSTEM" | "PORTFOLIO PRODUCT";
   id: string;
   slug: string;
   name: string;
