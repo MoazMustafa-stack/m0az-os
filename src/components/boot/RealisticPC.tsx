@@ -36,15 +36,19 @@ export function RealisticPC({ phase, theme, onPower }: { phase: MachinePhase; th
       try {
         const { createPC } = await import("./pc-renderer");
         if (request !== generation || current.current.phase !== "idle") return;
-        const view = createPC(host, () => {
+        const view = await createPC(host, () => {
           if (current.current.phase === "idle") current.current.onPower();
         }, stop);
+        if (request !== generation || current.current.phase !== "idle") {
+          view.dispose();
+          return;
+        }
         viewRef.current = view;
         scene?.setAttribute("data-webgl", "ready");
         view.update(current.current.phase, current.current.theme);
       } catch {
         // The accessible CSS machine remains usable if WebGL/chunk loading fails.
-        stop();
+        if (request === generation) stop();
       }
     };
     const schedule = () => {

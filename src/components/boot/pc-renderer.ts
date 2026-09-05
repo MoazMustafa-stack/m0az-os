@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import type { MachinePhase } from "./MachineScene";
 import type { ThemeId } from "@/types/domain";
 
@@ -10,7 +9,7 @@ export interface PCView {
 }
 
 /** Locally authored geometry and textures: no external model or asset requests. */
-export function createPC(host: HTMLElement, onPower: () => void, onLost: () => void): PCView {
+export async function createPC(host: HTMLElement, onPower: () => void, onLost: () => void): Promise<PCView> {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
@@ -31,7 +30,6 @@ export function createPC(host: HTMLElement, onPower: () => void, onLost: () => v
   let tint = "#75ff70";
   let targetX = 0;
   let targetY = 0;
-  let environment: THREE.WebGLRenderTarget | undefined;
   const invalidate = () => {
     if (!frame && !disposed && !document.hidden) frame = requestAnimationFrame(render);
   };
@@ -133,19 +131,11 @@ export function createPC(host: HTMLElement, onPower: () => void, onLost: () => v
     scene.traverse((object) => {
       if (object instanceof THREE.DirectionalLight) object.shadow.dispose();
     });
-    environment?.dispose();
     renderer.dispose();
     renderer.forceContextLoss();
     renderer.domElement.remove();
   };
   try {
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    const room = new RoomEnvironment();
-    environment = pmrem.fromScene(room, .04);
-    scene.environment = environment.texture;
-    scene.environmentIntensity = .5;
-    room.dispose();
-    pmrem.dispose();
     const grain = canvasTexture(128, 128);
     const pixels = grain.ctx.createImageData(128, 128);
     for (let i = 0; i < pixels.data.length; i += 4) {
@@ -219,8 +209,8 @@ export function createPC(host: HTMLElement, onPower: () => void, onLost: () => v
     const desk = mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: .3 }), 0, .04, 0, scene);
     desk.rotation.x = -Math.PI / 2;
     desk.castShadow = false;
-    scene.add(new THREE.HemisphereLight("#e8efff", "#363025", .7));
-    const key = new THREE.DirectionalLight("#fff0d5", 2.2);
+    scene.add(new THREE.HemisphereLight("#e8efff", "#363025", 1.2));
+    const key = new THREE.DirectionalLight("#fff0d5", 2.8);
     key.position.set(-3, 7, 4);
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
@@ -266,7 +256,12 @@ export function createPC(host: HTMLElement, onPower: () => void, onLost: () => v
       ctx.fillStyle = "rgba(0,0,0,.18)";
       for (let y = 0; y < 768; y += 4) ctx.fillRect(0, y, 1024, 1);
       display.texture.needsUpdate = true;
+      renderer.domElement.dataset.bootStage = phase === "idle" ? "standby" : elapsed >= 1800 ? "ready" : "building";
     };
+    camera.position.set(4.8, 3.5, 9.3);
+    camera.lookAt(0, 1.5, 0);
+    drawScreen(0);
+    await renderer.compileAsync(scene, camera);
     host.append(renderer.domElement);
     observer.observe(host);
     resize();

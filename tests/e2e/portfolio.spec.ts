@@ -22,7 +22,7 @@ test("first visit focuses POWER and accepts typed initialization", async ({ page
   await expect(bootInput).toHaveValue("");
   await bootInput.fill("start");
   await bootInput.press("Enter");
-  await expect(page.getByText("Session compiled. Mounting interface…")).toBeVisible();
+  await expect(page.locator(".crt-welcome:visible, .realistic-pc canvas[data-boot-stage='ready']").first()).toBeVisible();
   await expect(page.getByRole("heading", { name: /Software engineer building reliable product systems/i })).toBeVisible({ timeout: 5_000 });
 });
 

@@ -754,3 +754,8 @@ code { color: var(--green); font-family: inherit; }
   .session-meters .startup-label { display: none; }
   .startup-return { padding-inline: 2px; font-size: 11px; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .revealing .status-bar, .revealing .sidebar, .revealing .workspace,
+  .revealing .terminal-dock { animation-delay: 0s !important; }
+}
