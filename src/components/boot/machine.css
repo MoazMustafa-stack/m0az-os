@@ -39,7 +39,7 @@
 .machine-sub strong { color: var(--green); }
 
 .computer {
-  width: min(560px, 86vw);
+  width: min(560px, 86vw, max(340px, calc((100dvh - 470px) * 1.333)));
   transform-style: preserve-3d;
   transform: rotateY(calc(-10deg + var(--px, 0) * 4deg)) rotateX(calc(6deg + var(--py, 0) * -3deg));
   animation: machine-float 7s ease-in-out infinite;
@@ -117,7 +117,7 @@
 .power-btn:hover { background: #3c281c; }
 .power-btn:focus-visible { outline: 3px solid #010402; outline-offset: 4px; }
 .power-btn:disabled { cursor: default; }
-.power-btn:active { transform: translateY(2px); }
+.power-btn:active { opacity: .88; }
 
 .keyboard-base {
   margin-top: 14px; height: 56px; padding: 10px 12px;
@@ -142,7 +142,7 @@
   position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.12; filter: blur(40px);
   background: radial-gradient(circle at 50% 30%, var(--shadow), transparent 55%);
 }
-.boot-screen.machine-boot { display: flex; flex-direction: column; padding: 0; overflow: auto; }
+.boot-screen.machine-boot { --bg: inherit; --green: inherit; --green-bright: inherit; --green-muted: inherit; --green-dim: inherit; --border: inherit; --border-soft: inherit; --shadow: inherit; display: flex; flex-direction: column; padding: 0; overflow: auto; }
 .boot-screen.machine-boot .machine-scene { flex: 1 0 auto; }
 .boot-screen.machine-boot .boot-command-row { position: sticky; bottom: 0; z-index: 5; padding: 14px clamp(16px, 4vw, 40px) 22px; background: linear-gradient(transparent, var(--bg) 45%); }
 

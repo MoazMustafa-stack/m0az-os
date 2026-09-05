@@ -6,16 +6,20 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test("first visit requires a typed initialization command", async ({ page }) => {
+test("first visit focuses POWER and accepts typed initialization", async ({ page }) => {
   await page.goto("/");
   await page.evaluate(() => { window.sessionStorage.setItem("m0az:test-first-visit", "true"); window.localStorage.removeItem("m0az-os:session"); });
   await page.addInitScript(() => window.localStorage.removeItem("m0az-os:session"));
   await page.reload();
   const bootInput = page.getByLabel("visitor@portfolio:~$");
+  await expect(page.getByRole("button", { name: "Power on M0AZ_OS" })).toBeFocused();
+  await page.keyboard.press("Tab");
   await expect(bootInput).toBeFocused();
   await bootInput.fill("wrong");
   await bootInput.press("Enter");
   await expect(page.getByText(/not recognized/i)).toBeVisible();
+  await expect(bootInput).toBeFocused();
+  await expect(bootInput).toHaveValue("");
   await bootInput.fill("start");
   await bootInput.press("Enter");
   await expect(page.getByText("Session compiled. Mounting interface…")).toBeVisible();
