@@ -161,7 +161,7 @@
   .computer, .crt-standby, .led i { animation: none !important; }
   .computer, .machine-scene.building .computer { transform: none !important; }
   .machine-scene .dust { display: none; }
-  .crt-boot p, .crt-progress i { animation: none; opacity: 1; }
+  .crt-boot p, .crt-boot .crt-welcome, .crt-progress i { animation: none; opacity: 1; }
   .machine-scene.entering { transition: none !important; }
 }
 @media (prefers-contrast: more) {

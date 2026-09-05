@@ -1,9 +1,9 @@
 "use client";
 
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { MachineScene } from "@/components/boot/MachineScene";
-import { playBootSound, playClick } from "@/lib/boot-sound";
+import { useBootSound } from "@/lib/boot-sound";
 import { useSystem } from "./SystemProvider";
 
 export function BootScreen() {
@@ -15,6 +15,8 @@ export function BootScreen() {
   const inputRef = useRef<HTMLInputElement>(null);
   const powerRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = useRef(false);
+  const bootRef = useRef<HTMLElement>(null);
+  const playSound = useBootSound(state.soundEnabled);
 
   useEffect(() => {
     if (typeof window === "undefined" || !state.bootVisible) return;
@@ -28,6 +30,7 @@ export function BootScreen() {
 
   useEffect(() => {
     if (typeof window === "undefined" || !building || entering) return;
+    bootRef.current?.focus({ preventScroll: true });
     const timer = window.setTimeout(() => setEntering(true), reducedMotion.current ? 250 : 2350);
     return () => window.clearTimeout(timer);
   }, [building, entering]);
@@ -43,8 +46,7 @@ export function BootScreen() {
 
   const startBoot = (source: "button" | "typed") => {
     if (building) return;
-    playClick(state.soundEnabled);
-    playBootSound(state.soundEnabled);
+    if (state.soundEnabled) playSound.current();
     setBuilding(true);
     setMessage(source === "button" ? "Power engaged. Building your portfolio session…" : "Building your portfolio session…");
   };
@@ -61,8 +63,16 @@ export function BootScreen() {
     startBoot("typed");
   };
 
+  const containFocus = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== "Tab") return;
+    event.preventDefault();
+    if (building) return;
+    const target = event.target === powerRef.current ? inputRef.current : powerRef.current;
+    target?.focus({ preventScroll: true });
+  };
+
   if (!state.bootVisible) return null;
-  return <section className={building ? "boot-screen machine-boot building" : "boot-screen machine-boot"} aria-label="Initialize M0AZ_OS portfolio">
+  return <section ref={bootRef} tabIndex={-1} onKeyDown={containFocus} className={building ? "boot-screen machine-boot building" : "boot-screen machine-boot"} aria-label="Initialize M0AZ_OS portfolio">
     <MachineScene phase={entering ? "entering" : building ? "building" : "idle"} theme={state.theme} onPower={() => startBoot("button")} powerRef={powerRef} />
     <div className="boot-command-row">
       <form className="boot-command" onSubmit={submit}>
