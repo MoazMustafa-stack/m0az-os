@@ -73,6 +73,12 @@ function Shell() {
           <div title="Commands retained in local history"><dt>CMDS</dt><dd>{state.commandHistory.length}</dd></div>
           <div title="Navigable portfolio pages and case studies"><dt>ROUTES</dt><dd>{navigation.length + secondaryNavigation.length + projects.length}</dd></div>
           <div><dt>THEME</dt><dd>{state.theme}</dd></div>
+          <div><dt className="startup-label">PC</dt><dd><button type="button" className="startup-return" onClick={() => {
+            document.documentElement.classList.remove("low-power");
+            dispatch({ type: "TOGGLE_PALETTE", open: false });
+            dispatch({ type: "SET_REVEAL", active: false });
+            dispatch({ type: "SET_BOOT", visible: true });
+          }}>Back to startup</button></dd></div>
         </dl>
       </div>
       <div className="system-frame">

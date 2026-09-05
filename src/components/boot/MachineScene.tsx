@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import type { ThemeId } from "@/types/domain";
+import { RealisticPC } from "./RealisticPC";
 
 export type MachinePhase = "idle" | "building" | "entering";
 
@@ -163,6 +164,7 @@ export function MachineScene({
             <strong>START</strong> below.
           </p>
         </div>
+        <RealisticPC phase={phase} theme={theme} onPower={onPower} />
         <div className="computer" aria-hidden="false">
           <div className="monitor">
             <div className="screen">

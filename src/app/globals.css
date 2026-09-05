@@ -744,3 +744,13 @@ code { color: var(--green); font-family: inherit; }
   --green-muted: color-mix(in srgb, var(--green-bright) 90%, var(--bg));
   --green-dim: color-mix(in srgb, var(--green-bright) 80%, var(--bg));
 }
+
+/* Startup remains reachable without knowing the terminal reboot command. */
+.session-meters { grid-template-columns: 1fr 1fr 1fr minmax(150px, 1fr); }
+.startup-return { color: var(--green-bright); background: none; border: 0; padding: 4px 8px; font: inherit; letter-spacing: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.startup-return:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+@media (max-width: 680px) {
+  .session-meters { grid-template-columns: .7fr .7fr 1fr minmax(116px, 1.2fr); gap: 2px; }
+  .session-meters .startup-label { display: none; }
+  .startup-return { padding-inline: 2px; font-size: 11px; }
+}

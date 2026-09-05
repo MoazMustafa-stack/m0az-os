@@ -26,6 +26,26 @@ test("first visit focuses POWER and accepts typed initialization", async ({ page
   await expect(page.getByRole("heading", { name: /Software engineer building reliable product systems/i })).toBeVisible({ timeout: 5_000 });
 });
 
+test("startup control preserves page and preferences through another boot", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/experience");
+  await page.getByRole("button", { name: "Switch to light mode" }).click();
+  const terminal = page.getByLabel("M0AZ_OS terminal command");
+  await terminal.fill("sound on");
+  await terminal.press("Enter");
+  await page.getByRole("button", { name: "Back to startup" }).click();
+  const power = page.getByRole("button", { name: "Power on M0AZ_OS" });
+  await expect(power).toBeFocused();
+  await expect(page.getByLabel("visitor@portfolio:~$")).toHaveValue("");
+  await expect(page.locator(".realistic-pc canvas")).toHaveCount(0);
+  await power.press("Enter");
+  await expect(page.locator(".machine-boot")).toHaveCount(0);
+  await expect(page).toHaveURL(/\/experience$/);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("m0az-os:session") ?? "{}").soundEnabled)).toBe(true);
+  await expect(page.locator(".os-viewport")).toHaveAttribute("data-theme", "light");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
 test("five-item navigation opens Work with a shareable URL", async ({ page }) => {
   await page.goto("/");
   const primary = page.locator(".system-nav .nav-item");
