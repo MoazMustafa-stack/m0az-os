@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
+import { navigation, projects, secondaryNavigation } from "@/content/site";
 import type { SectionId } from "@/types/domain";
 import { BootScreen } from "./BootScreen";
 import { CommandPalette } from "./CommandPalette";
@@ -66,7 +67,14 @@ function Shell() {
     <div ref={viewportRef} className={state.revealSequence ? "os-viewport revealing booted" : state.bootComplete ? "os-viewport booted" : "os-viewport"} data-theme={state.theme}>
       <a className="skip-link" href="#main-content">Skip to content</a>
       {!state.bootVisible ? <div className="machine-afterglow" aria-hidden="true" /> : null}
-      <StatusBar />
+      <div className="shell-topbar">
+        <StatusBar />
+        <dl className="session-meters" aria-label="Portfolio session readout">
+          <div title="Commands retained in local history"><dt>CMDS</dt><dd>{state.commandHistory.length}</dd></div>
+          <div title="Navigable portfolio pages and case studies"><dt>ROUTES</dt><dd>{navigation.length + secondaryNavigation.length + projects.length}</dd></div>
+          <div><dt>THEME</dt><dd>{state.theme}</dd></div>
+        </dl>
+      </div>
       <div className="system-frame">
         <Sidebar />
         <Workspace />
