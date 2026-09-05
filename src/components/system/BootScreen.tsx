@@ -2,30 +2,52 @@
 
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
+import { MachineScene } from "@/components/boot/MachineScene";
+import { playBootSound, playClick } from "@/lib/boot-sound";
 import { useSystem } from "./SystemProvider";
-
-const bootLines = [
-  ["identity.profile", "LOADED"],
-  ["experience.timeline", "MOUNTED"],
-  ["work.case-studies", "INDEXED"],
-  ["recruiter.path", "ONLINE"],
-  ["freelance.services", "ONLINE"],
-  ["accessibility.guard", "PASS"],
-  ["portfolio.interface", "READY"],
-] as const;
 
 export function BootScreen() {
   const { state, dispatch } = useSystem();
   const [input, setInput] = useState("");
   const [building, setBuilding] = useState(false);
-  const [message, setMessage] = useState("Awaiting visitor command.");
+  const [entering, setEntering] = useState(false);
+  const [message, setMessage] = useState("Awaiting visitor command. Click START or type START.");
   const inputRef = useRef<HTMLInputElement>(null);
+  const powerRef = useRef<HTMLButtonElement>(null);
+  const reducedMotion = useRef(false);
 
   useEffect(() => {
-    if (!state.bootVisible) return;
-    const timer = window.setTimeout(() => inputRef.current?.focus(), 30);
-    return () => window.clearTimeout(timer);
+    if (typeof window === "undefined" || !state.bootVisible) return;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => { reducedMotion.current = media.matches; };
+    updateMotion();
+    media.addEventListener("change", updateMotion);
+    const timer = window.setTimeout(() => powerRef.current?.focus({ preventScroll: true }), 40);
+    return () => { window.clearTimeout(timer); media.removeEventListener("change", updateMotion); };
   }, [state.bootVisible]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !building || entering) return;
+    const timer = window.setTimeout(() => setEntering(true), reducedMotion.current ? 250 : 2350);
+    return () => window.clearTimeout(timer);
+  }, [building, entering]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !entering) return;
+    const timer = window.setTimeout(() => {
+      dispatch({ type: "SET_BOOT", visible: false, complete: true });
+      dispatch({ type: "SET_REVEAL", active: true });
+    }, reducedMotion.current ? 60 : 450);
+    return () => window.clearTimeout(timer);
+  }, [dispatch, entering]);
+
+  const startBoot = (source: "button" | "typed") => {
+    if (building) return;
+    playClick(state.soundEnabled);
+    playBootSound(state.soundEnabled);
+    setBuilding(true);
+    setMessage(source === "button" ? "Power engaged. Building your portfolio session…" : "Building your portfolio session…");
+  };
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -36,34 +58,20 @@ export function BootScreen() {
       inputRef.current?.focus();
       return;
     }
-    setBuilding(true);
-    setMessage("Building your portfolio session…");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.setTimeout(() => {
-      dispatch({ type: "SET_BOOT", visible: false, complete: true });
-      dispatch({ type: "SET_REVEAL", active: true });
-    }, reducedMotion ? 250 : 2350);
+    startBoot("typed");
   };
 
   if (!state.bootVisible) return null;
-  return <section className={building ? "boot-screen building" : "boot-screen"} aria-label="Initialize M0AZ_OS portfolio">
-    <div className="boot-console">
-      <header><b>M0AZ_OS / FIRST CONTACT</b><span>build.2026</span></header>
-      <div className="boot-intro">
-        <p className="eyebrow">INTERACTIVE PORTFOLIO</p>
-        <h1>Initialize the site.</h1>
-        <p>This portfolio reveals itself like a live system. Type <strong>START</strong> to load the recruiter and project interface.</p>
-      </div>
+  return <section className={building ? "boot-screen machine-boot building" : "boot-screen machine-boot"} aria-label="Initialize M0AZ_OS portfolio">
+    <MachineScene phase={entering ? "entering" : building ? "building" : "idle"} theme={state.theme} onPower={() => startBoot("button")} powerRef={powerRef} />
+    <div className="boot-command-row">
       <form className="boot-command" onSubmit={submit}>
         <label htmlFor="boot-command-input">visitor@portfolio:~$</label>
         <input id="boot-command-input" ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} disabled={building} autoComplete="off" spellCheck={false} aria-describedby="boot-command-help" />
         <span className="block-cursor" aria-hidden="true" />
       </form>
       <p id="boot-command-help" className="boot-message" aria-live="polite">{message}</p>
-      <div className="boot-lines" aria-hidden={!building}>{bootLines.map(([service, status]) => <p key={service}><span>{service}</span><i /><b>[ {status} ]</b></p>)}</div>
-      <div className="boot-progress" aria-hidden="true"><i /></div>
-      <p className="boot-welcome">Session compiled. Mounting interface…</p>
     </div>
-    <p className="boot-access-note">Keyboard required for initialization · accepted commands: START / INIT / ENTER</p>
+    <p className="boot-access-note">Click START or type START / INIT / ENTER</p>
   </section>;
 }

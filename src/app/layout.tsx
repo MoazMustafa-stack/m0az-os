@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { education, siteIdentity, technologyCategories } from "@/content/site";
 import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
+import "@/components/boot/machine.css";
 
 export const metadata: Metadata = {
   metadataBase: SITE_URL,

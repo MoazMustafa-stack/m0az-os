@@ -1,0 +1,170 @@
+.machine-scene {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(20px, 4vh, 44px) clamp(16px, 4vw, 40px) 36px;
+  perspective: 1400px;
+  background:
+    radial-gradient(ellipse at 50% 125%, var(--shadow), transparent 58%),
+    repeating-linear-gradient(to bottom, transparent 0 46px, var(--shadow) 46px 47px),
+    linear-gradient(#020503, var(--bg));
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.machine-scene.entering { opacity: 0; transform: scale(1.12); pointer-events: none; transition: opacity .45s ease, transform .45s ease; }
+.machine-scene[data-theme="light"] { background: radial-gradient(ellipse at 50% 125%, var(--shadow), transparent 58%), #e9ebe2; }
+.machine-scene .dust { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.machine-stage {
+  position: relative;
+  width: min(880px, 100%);
+  display: grid;
+  gap: 26px;
+  justify-items: center;
+  text-align: center;
+}
+.machine-head .eyebrow { margin-bottom: 10px; }
+.machine-head h2 {
+  margin: 0;
+  color: var(--green-bright);
+  font-size: clamp(38px, 6.5vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  font-weight: 800;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.machine-sub { max-width: 620px; margin: 14px auto 0; color: var(--green-muted); font-size: 13px; line-height: 1.75; }
+.machine-sub strong { color: var(--green); }
+
+.computer {
+  width: min(560px, 86vw);
+  transform-style: preserve-3d;
+  transform: rotateY(calc(-10deg + var(--px, 0) * 4deg)) rotateX(calc(6deg + var(--py, 0) * -3deg));
+  animation: machine-float 7s ease-in-out infinite;
+}
+.machine-scene.building .computer { animation: machine-dolly 2s ease-in-out forwards; }
+.machine-scene.entering .computer { animation: none; transform: rotateX(0deg) rotateY(0deg) translateZ(320px) scale(1.9); }
+@keyframes machine-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes machine-dolly { to { transform: rotateX(0deg) rotateY(0deg) translateZ(320px) scale(1.9); } }
+
+.monitor {
+  border-radius: 22px;
+  background: linear-gradient(180deg, #d8d2c4 0%, #b8b0a0 100%);
+  border: 1px solid #8a8378;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .5), 0 0 28px var(--shadow), inset 0 0 60px rgba(0, 0, 0, .55), inset 1px 1px 0 rgba(255, 255, 255, .5);
+  padding: 18px 18px 14px;
+}
+
+.screen {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #010402;
+  border: 1px solid var(--border-soft);
+  box-shadow: inset 0 0 40px #000, 0 0 28px var(--shadow);
+  padding: 18px;
+  text-align: left;
+}
+.crt-glare {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.09) 0%, transparent 28%);
+}
+.crt-scan {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0, 0, 0, 0.35) 3px 4px);
+}
+.crt-standby { animation: crt-flicker 4s steps(2) infinite; }
+.crt-standby p { margin: 30px 0 8px; color: var(--green); font-size: 13px; letter-spacing: 0.1em; }
+.crt-standby span { color: var(--green); font-size: 10px; letter-spacing: 0.18em; }
+@keyframes crt-flicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+
+.crt-boot p {
+  display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 10px;
+  margin: 0; padding: 5px 0; color: var(--green); font-size: 11px;
+  opacity: 0; animation: crt-line 0.15s forwards;
+}
+.crt-boot p:nth-child(1) { animation-delay: 0.1s; }
+.crt-boot p:nth-child(2) { animation-delay: 0.28s; }
+.crt-boot p:nth-child(3) { animation-delay: 0.46s; }
+.crt-boot p:nth-child(4) { animation-delay: 0.64s; }
+.crt-boot p:nth-child(5) { animation-delay: 0.9s; }
+.crt-boot p:nth-child(6) { animation-delay: 1.08s; }
+.crt-boot p:nth-child(7) { animation-delay: 1.26s; }
+@keyframes crt-line { to { opacity: 1; } }
+.crt-boot i { border-top: 1px dotted var(--border-soft); min-width: 40px; }
+.crt-boot b { color: var(--green); font-size: 10px; }
+.crt-progress { height: 5px; margin-top: 14px; background: #0b1b0d; overflow: hidden; }
+.crt-progress i { display: block; width: 100%; height: 100%; background: var(--green); transform-origin: left; animation: crt-bar 1.75s 0.12s ease-out both; border: 0; }
+@keyframes crt-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.crt-boot .crt-welcome { display: block; margin-top: 12px; color: var(--green-bright); animation: crt-line 0.1s 1.8s forwards; }
+.machine-scene[data-theme="light"] .screen { --green: #75ff70; --green-bright: #b1ffad; }
+
+.monitor-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.led { display: inline-flex; align-items: center; gap: 7px; color: #332c23; font-size: 9px; letter-spacing: 0.14em; }
+.led i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 9px var(--green); animation: led-pulse 2s infinite; }
+.activity-led i { background: var(--red); box-shadow: 0 0 9px var(--red); animation: none; }
+@keyframes led-pulse { 50% { opacity: 0.45; } }
+.brand-tag { color: #4a4338; font-size: 8px; letter-spacing: 0.16em; text-shadow: 1px 1px 0 rgba(255, 255, 255, .5); }
+.power-btn {
+  min-height: 52px; padding: 0 22px; border: 0; cursor: pointer;
+  background: #513827; color: #fff8ec;
+  font-weight: 800; font-size: 12px; letter-spacing: 0.12em;
+  box-shadow: 0 0 24px var(--shadow), inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+}
+.power-btn:hover { background: #3c281c; }
+.power-btn:focus-visible { outline: 3px solid #010402; outline-offset: 4px; }
+.power-btn:disabled { cursor: default; }
+.power-btn:active { transform: translateY(2px); }
+
+.keyboard-base {
+  margin-top: 14px; height: 56px; padding: 10px 12px;
+  transform: rotateX(58deg) translateZ(-30px);
+  background: #a69c8b; border: 1px solid #8a8378; border-radius: 10px;
+  display: grid; gap: 6px;
+}
+.key-row { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; }
+.key-row:last-child { grid-template-columns: repeat(12, 1fr); }
+.key-row span { height: 10px; border-radius: 2px; background: #d8d2c4; border: 1px solid #8a8378; }
+.key-row span.wide { grid-column: span 3; background: var(--green); opacity: 0.7; }
+
+.sticky-notes { position: absolute; inset: 0; pointer-events: none; }
+.note {
+  position: absolute; padding: 8px 10px; font-size: 9px; letter-spacing: 0.06em;
+  background: #f4dfa0; border: 1px solid #a68b45; color: #332c23;
+}
+.note.n1 { top: 6%; right: 2%; transform: rotate(4deg); }
+.note.n2 { bottom: 14%; left: 1%; transform: rotate(-6deg); background: #edb7c9; border-color: #b47b8d; }
+
+.machine-afterglow {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.12; filter: blur(40px);
+  background: radial-gradient(circle at 50% 30%, var(--shadow), transparent 55%);
+}
+.boot-screen.machine-boot { display: flex; flex-direction: column; padding: 0; overflow: auto; }
+.boot-screen.machine-boot .machine-scene { flex: 1 0 auto; }
+.boot-screen.machine-boot .boot-command-row { position: sticky; bottom: 0; z-index: 5; padding: 14px clamp(16px, 4vw, 40px) 22px; background: linear-gradient(transparent, var(--bg) 45%); }
+
+@media (max-width: 680px) {
+  .machine-scene { perspective: none; padding-bottom: 24px; }
+  .computer { width: 100%; transform: none !important; animation: none !important; }
+  .keyboard-base, .sticky-notes, .machine-scene .dust { display: none !important; }
+  .power-btn { width: 100%; min-height: 56px; }
+  .monitor-row { flex-direction: column; align-items: stretch; }
+  .brand-tag { text-align: center; }
+  .screen { padding: 12px; }
+  .crt-boot p { gap: 4px; font-size: 10px; }
+  .crt-boot i { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .computer, .crt-standby, .led i { animation: none !important; }
+  .computer, .machine-scene.building .computer { transform: none !important; }
+  .machine-scene .dust { display: none; }
+  .crt-boot p, .crt-progress i { animation: none; opacity: 1; }
+  .machine-scene.entering { transition: none !important; }
+}
+@media (prefers-contrast: more) {
+  .monitor, .screen, .power-btn { border: 2px solid currentColor; }
+  .machine-sub { color: var(--ink); }
+}

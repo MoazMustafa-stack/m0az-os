@@ -35,8 +35,9 @@ function Shell() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [dispatch, state.bootVisible]);
   return (
-    <div className={state.revealSequence ? "os-viewport revealing" : "os-viewport"} data-theme={state.theme}>
+    <div className={state.revealSequence ? "os-viewport revealing booted" : state.bootComplete ? "os-viewport booted" : "os-viewport"} data-theme={state.theme}>
       <a className="skip-link" href="#main-content">Skip to content</a>
+      {!state.bootVisible ? <div className="machine-afterglow" aria-hidden="true" /> : null}
       <StatusBar />
       <div className="system-frame">
         <Sidebar />

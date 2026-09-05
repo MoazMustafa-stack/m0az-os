@@ -14,6 +14,10 @@
   --ink: #d9f7d7;
   --shadow: rgba(36, 255, 66, 0.08);
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-display: system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+  --depth-1: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --depth-2: 0 20px 70px rgba(0, 0, 0, 0.5);
+  --glow: 0 0 28px var(--shadow);
   --status-height: 48px;
   --terminal-height: 58px;
   --sidebar-width: 252px;
