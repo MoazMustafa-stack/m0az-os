@@ -185,3 +185,50 @@
 .machine-scene[data-webgl="ready"] .monitor-row > .led { display: none; }
 .machine-scene[data-webgl="ready"] .power-btn { min-width: 200px; border-radius: 6px; }
 .machine-scene[data-webgl="ready"] .power-btn:focus-visible { outline-color: var(--green); }
+
+/* Studio direction: editorial introduction + an inspectable physical diorama. */
+.machine-editorial, .machine-inspect { display: none; }
+.boot-screen.machine-boot { background: var(--bg); }
+.boot-screen.machine-boot .boot-command-row { width: 100%; background: var(--bg); }
+.boot-screen.machine-boot .boot-access-note { color: var(--green-muted); }
+.machine-scene[data-webgl="ready"] {
+  padding: 42px clamp(24px, 5vw, 80px);
+  background: radial-gradient(ellipse at 78% 40%, #253631 0%, transparent 52%), radial-gradient(ellipse at 10% 90%, #282319, transparent 60%), #080e0c;
+}
+.machine-scene[data-webgl="ready"] .machine-stage {
+  width: min(1500px, 100%); grid-template-columns: minmax(270px, .65fr) minmax(0, 1.65fr);
+  column-gap: 28px; row-gap: 24px; align-items: center;
+}
+.machine-scene[data-webgl="ready"] .machine-head { grid-column: 1; grid-row: 1; text-align: left; align-self: end; }
+.machine-scene[data-webgl="ready"] .machine-head h2 { color: #f1efdf; font-size: clamp(52px, 5.2vw, 88px); line-height: .98; max-width: 6.5em; }
+.machine-scene[data-webgl="ready"] .machine-head .eyebrow { color: #bfcab9; font-size: 11px; line-height: 1.8; letter-spacing: .16em; margin-bottom: 30px; }
+.machine-scene[data-webgl="ready"] .machine-sub { margin: 22px 0 0; font-family: var(--font-display); font-size: 17px; line-height: 1.65; color: #becbc0; }
+.machine-scene[data-webgl="ready"] .machine-editorial { display: block; margin-top: 36px; padding-top: 22px; border-top: 1px solid #415349; }
+.machine-edition { color: #a5b5a9; font-size: 10px; letter-spacing: .16em; }
+.machine-editorial p { font-family: var(--font-display); font-size: 21px; line-height: 1.4; color: #e0e6d8; margin: 13px 0 22px; }
+.machine-chapters { display: flex; flex-direction: column; gap: 9px; color: #a9bcb0; font-size: 10px; letter-spacing: .08em; }
+.machine-scene[data-webgl="ready"] .machine-inspect { display: block; color: #aabbb0; font-size: 11px; line-height: 1.7; margin: 24px 0 0; }
+.machine-scene[data-webgl="ready"] .realistic-pc {
+  grid-column: 2; grid-row: 1 / 3; height: clamp(440px, 64vh, 760px);
+  border-radius: 28px; border: 1px solid #3a4c42; overflow: hidden; cursor: grab;
+  background: radial-gradient(ellipse at 35% 25%, #3c4439, #101b17 72%);
+  box-shadow: 0 32px 80px #0007, inset 0 1px #dce7cf22;
+}
+.machine-scene[data-webgl="ready"] .realistic-pc[data-dragging="true"] { cursor: grabbing; }
+.machine-scene[data-webgl="ready"] .computer { grid-column: 1; grid-row: 2; justify-self: start; align-self: start; }
+.machine-scene[data-webgl="ready"] .power-btn { min-height: 58px; min-width: 230px; background: #dac5a0; color: #28241a; font-size: 13px; border: 1px solid #f4e6c8; box-shadow: inset 0 -4px #947d58, 0 12px 28px #0005; }
+.machine-scene[data-webgl="ready"] .power-btn:hover { background: #eee0bf; }
+.machine-scene[data-webgl="ready"][data-theme="light"] { background: radial-gradient(ellipse at 75% 30%, #d1d8c7, transparent 60%), #e9ebe2; }
+.machine-scene[data-webgl="ready"][data-theme="light"] .machine-head h2 { color: #203b30; }
+.machine-scene[data-webgl="ready"][data-theme="light"] .machine-sub,
+.machine-scene[data-webgl="ready"][data-theme="light"] .machine-head .eyebrow,
+.machine-scene[data-webgl="ready"][data-theme="light"] .machine-editorial *,
+.machine-scene[data-webgl="ready"][data-theme="light"] .machine-inspect { color: #405447; }
+@media (min-width: 681px) and (max-width: 1050px) {
+  .machine-scene[data-webgl="ready"] .machine-stage { grid-template-columns: 1fr; }
+  .machine-scene[data-webgl="ready"] .machine-head { grid-column: 1; grid-row: 1; text-align: center; }
+  .machine-scene[data-webgl="ready"] .machine-head h2 { max-width: none; font-size: 56px; }
+  .machine-scene[data-webgl="ready"] .machine-editorial { display: none; }
+  .machine-scene[data-webgl="ready"] .realistic-pc { grid-column: 1; grid-row: 2; height: 460px; }
+  .machine-scene[data-webgl="ready"] .computer { grid-row: 3; justify-self: center; }
+}

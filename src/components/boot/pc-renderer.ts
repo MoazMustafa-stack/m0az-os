@@ -78,15 +78,40 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
   const pointer = new THREE.Vector2();
   const ray = new THREE.Raycaster();
   const fine = window.matchMedia("(pointer: fine)");
+  let dragging = false;
+  let dragged = false;
+  let dragX = 0;
+  let dragBase = 0;
+  const down = (event: PointerEvent) => {
+    if (phase !== "idle" || !fine.matches || event.button !== 0) return;
+    dragging = true;
+    dragged = false;
+    dragX = event.clientX;
+    dragBase = targetX;
+    host.setPointerCapture(event.pointerId);
+    host.dataset.dragging = "true";
+  };
+  const up = (event: PointerEvent) => {
+    dragging = false;
+    delete host.dataset.dragging;
+    if (host.hasPointerCapture(event.pointerId)) host.releasePointerCapture(event.pointerId);
+  };
   const move = (event: PointerEvent) => {
     const bounds = host.getBoundingClientRect();
     pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -(event.clientY - bounds.top) / bounds.height * 2 + 1);
-    if (phase === "idle" && fine.matches) { targetX = pointer.x; targetY = pointer.y; invalidate(); }
+    if (phase === "idle" && fine.matches) {
+      if (dragging) {
+        dragged ||= Math.abs(event.clientX - dragX) > 5;
+        targetX = THREE.MathUtils.clamp(dragBase + (event.clientX - dragX) / 65, -5, 5);
+      } else if (!dragged) { targetX = pointer.x; }
+      targetY = pointer.y;
+      invalidate();
+    }
   };
-  const leave = () => { targetX = 0; targetY = 0; invalidate(); };
+  const leave = () => { if (!dragging && !dragged) targetX = 0; targetY = 0; invalidate(); };
   let power: THREE.Mesh;
   const click = (event: MouseEvent) => {
-    if (phase !== "idle") return;
+    if (phase !== "idle" || dragged) return;
     const bounds = host.getBoundingClientRect();
     pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, -(event.clientY - bounds.top) / bounds.height * 2 + 1);
     ray.setFromCamera(pointer, camera);
@@ -107,7 +132,7 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
     const progress = phase === "idle" ? 0 : THREE.MathUtils.smoothstep(elapsed, 0, 2350);
     pc.rotation.y += ((phase === "idle" ? targetX * .12 : 0) - pc.rotation.y) * .08;
     pc.rotation.x += ((phase === "idle" ? -targetY * .025 : 0) - pc.rotation.x) * .08;
-    camera.position.set(4.8 * (1 - progress), 3.5 - progress * 1.35, 9.3 - progress * 6.9);
+    camera.position.set(5.6 * (1 - progress), 4.4 - progress * 2.25, 10.5 - progress * 8.1);
     camera.lookAt(0, 1.5 + progress * .55, 0);
     drawScreen(elapsed);
     busy.visible = phase === "building";
@@ -120,6 +145,10 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
     disposed = true;
     cancelAnimationFrame(frame);
     observer.disconnect();
+    host.removeEventListener("pointerdown", down);
+    host.removeEventListener("pointerup", up);
+    host.removeEventListener("pointercancel", up);
+    delete host.dataset.dragging;
     host.removeEventListener("pointermove", move);
     host.removeEventListener("pointerleave", leave);
     host.removeEventListener("click", click);
@@ -206,7 +235,44 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
     box(.012, .016, .33, 2.65, .415, 1.97, brown, .003);
     const cable = new THREE.CatmullRomCurve3([new THREE.Vector3(2.65, .1, 1.7), new THREE.Vector3(2.9, .08, .5), new THREE.Vector3(2.1, .09, -.7), new THREE.Vector3(1.1, .3, -1.1)]);
     mesh(new THREE.TubeGeometry(cable, 32, .022, 6, false), dark, 0, 0, 0);
+    // A complete workstation, with authored surface grain rather than downloads.
+    const timber = canvasTexture(512, 256);
+    timber.ctx.fillStyle = "#493329";
+    timber.ctx.fillRect(0, 0, 512, 256);
+    for (let i = 0; i < 900; i++) {
+      const y = Math.random() * 256;
+      timber.ctx.strokeStyle = `rgba(${Math.random() > .5 ? "172,119,73" : "16,9,5"},${.03 + Math.random() * .13})`;
+      timber.ctx.beginPath();
+      timber.ctx.moveTo(0, y);
+      timber.ctx.bezierCurveTo(150, y - 4, 320, y + 4, 512, y);
+      timber.ctx.stroke();
+    }
+    const wood = material("#a48a73", .48);
+    wood.map = timber.texture;
+    wood.bumpMap = timber.texture;
+    wood.bumpScale = .012;
+    box(8.4, .2, 5.8, 0, -.08, .6, wood, .09);
+    box(4.9, .025, 1.72, .38, .04, 2.22, material("#263c36", .95), .06);
+    box(1.02, 2.58, 1.9, -2.62, 1.32, -.55, plastic, .09);
+    box(.91, 2.43, .075, -2.62, 1.32, .445, trim, .035);
+    box(.7, .18, .03, -2.62, 2.26, .494, brown, .012);
+    box(.6, .018, .035, -2.62, 2.26, .516, dark, .003);
+    box(.7, .24, .03, -2.62, 1.95, .495, plastic, .012);
+    for (let i = 0; i < 13; i++) box(.69, .021, .025, -2.62, .42 + i * .052, .50, dark, .004);
+    mesh(new THREE.SphereGeometry(.025, 10, 8), ledMat, -2.91, 1.55, .504);
+    const metal = material("#9da09b", .24);
+    metal.metalness = .8;
+    for (const x of [-1.67, 1.67]) for (const y of [.69, 3.17]) {
+      const screw = mesh(new THREE.CylinderGeometry(.025, .025, .012, 12), metal, x, y, 1.067);
+      screw.rotation.x = Math.PI / 2;
+    }
+    // Stacked diskettes provide scale without obscuring the main machine.
+    box(.62, .045, .65, 3.05, .065, .5, accent, .018);
+    const disk = box(.62, .045, .65, 3.03, .112, .5, brown, .018);
+    disk.rotation.y = -.18;
+    box(.32, .012, .22, 3.03, .14, .34, metal, .01);
     const desk = mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: .3 }), 0, .04, 0, scene);
+    desk.position.y = -.2;
     desk.rotation.x = -Math.PI / 2;
     desk.castShadow = false;
     scene.add(new THREE.HemisphereLight("#e8efff", "#363025", 1.2));
@@ -218,11 +284,11 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
     key.shadow.camera.right = key.shadow.camera.top = 6;
     key.shadow.normalBias = .035;
     scene.add(key);
-    const rim = new THREE.DirectionalLight("#b9d5ed", 1.2);
+    const rim = new THREE.DirectionalLight("#b9d5ed", 2);
     rim.position.set(4, 4, -4);
     scene.add(rim);
     const glow = new THREE.PointLight(tint, .6, 3);
-    glow.position.set(0, 1, 1.8);
+    glow.position.set(0, .45, 1.8);
     scene.add(glow);
     const labels = ["identity.profile", "experience.timeline", "work.case-studies", "recruiter.path", "freelance.services", "accessibility.guard", "portfolio.interface"];
     const delays = [100, 280, 460, 640, 900, 1080, 1260];
@@ -258,13 +324,16 @@ export async function createPC(host: HTMLElement, onPower: () => void, onLost: (
       display.texture.needsUpdate = true;
       renderer.domElement.dataset.bootStage = phase === "idle" ? "standby" : elapsed >= 1800 ? "ready" : "building";
     };
-    camera.position.set(4.8, 3.5, 9.3);
+    camera.position.set(5.6, 4.4, 10.5);
     camera.lookAt(0, 1.5, 0);
     drawScreen(0);
     await renderer.compileAsync(scene, camera);
     host.append(renderer.domElement);
     observer.observe(host);
     resize();
+    host.addEventListener("pointerdown", down);
+    host.addEventListener("pointerup", up);
+    host.addEventListener("pointercancel", up);
     host.addEventListener("pointermove", move);
     host.addEventListener("pointerleave", leave);
     host.addEventListener("click", click);

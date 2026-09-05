@@ -163,6 +163,12 @@ export function MachineScene({
             This portfolio reveals itself like a live system. Click <strong>POWER</strong> or type{" "}
             <strong>START</strong> below.
           </p>
+          <div className="machine-editorial">
+            <span className="machine-edition">PERSONAL WORKSTATION — 001</span>
+            <p>Built to be explored.<br />Engineered to do real work.</p>
+            <div className="machine-chapters"><span>01 / EXPERIENCE</span><span>02 / SELECTED WORK</span><span>03 / LET’S BUILD</span></div>
+          </div>
+          <p className="machine-inspect">Drag the workstation to look around. Power on when you’re ready.</p>
         </div>
         <RealisticPC phase={phase} theme={theme} onPower={onPower} />
         <div className="computer" aria-hidden="false">
